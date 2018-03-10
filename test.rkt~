@@ -1,0 +1,68 @@
+#lang vr-lang
+
+(require urlang)
+
+
+(urlang
+ (urmodule js/fact                                          
+           (export fact)                                          
+           (import + - * = displayln ref console)
+           (define (fact n) (if (= n 0) 1 (* n (fact (- n 1)))))
+           (fact 5)))
+
+
+(define (test-scene)
+  (define (random-color)
+    (color (random 256)
+           (random 256)
+           (random 256)
+           255))
+
+  (define test-sky
+    (entity "sky"
+            (random-color)))
+
+  (define test-box
+    (entity "box"
+            (position -1 0.5 -3)
+            (random-color)
+            (scale 1 1 1)
+            (rotation 0 45 0)))
+
+  (define test-cyl
+    (entity "cylinder"
+            (position 0 0.5 -3)
+            (random-color)
+            (height 1.5)
+            (radius 0.5)
+            (scale 1 1 1)))
+
+
+  (define test-sphere
+    (entity "sphere"
+            (position 0 1.25 -5)
+            (radius 1.25)
+            (random-color)
+            (entity "animation"
+                    (attribute "position")
+                    (to -3 1.5 3)
+                    (direction "alternate")
+                    (dur "400")
+                    (repeat "indefinite"))))
+
+  (define test-plane
+    (entity "plane"
+            (position 0 0 -4)
+            (rotation -90 0 0)
+            (width 4)
+            (height 4) 
+            (random-color)))
+
+  (scene test-sky
+         test-sphere
+         test-box
+         test-cyl
+         test-plane))
+
+
+(send-to-browser (test-scene))

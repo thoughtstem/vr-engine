@@ -1,0 +1,2 @@
+"use strict";
+((AFRAME["registerComponent"])("random-position",{schema:{min:{default:{x:-10,y:1,z:-10},type:"vec3"},max:{default:{x:10,y:1,z:10},type:"vec3"}},init:(function(){var data=this.data,max=data.max,min=data.min,rx=((Math.random)()),ry=((Math.random)()),rz=((Math.random)()),xdiff=(max.x-min.x),ydiff=(max.y-min.y),zdiff=(max.z-min.z),xnew=((rx*xdiff)+min.x),ynew=((ry*ydiff)+min.y),znew=((rz*zdiff)+min.z);return ((this.el["setAttribute"])("position",{x:xnew,y:ynew,z:znew}));})}));

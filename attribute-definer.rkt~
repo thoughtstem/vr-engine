@@ -1,0 +1,17 @@
+#lang racket
+
+(require (for-syntax racket/syntax))
+
+(define-syntax (define-attribute stx)
+  (syntax-case stx ()
+    [(_ name vars ... )
+     (let* ()
+       (with-syntax* ([->html (format-id stx "~a->html" #'name)]
+                      [vars/sym  (map syntax-e (syntax->list #'(vars ...)))]
+                      [vars/id   (map (λ(s) (format-id stx "~a-~a" #'name s)) (syntax->list #'vars/sym))]
+                      [accessors (map (λ(s) (datum->syntax #f (list s 'p))) (syntax->list #'vars/id))])
+         (datum->syntax stx
+                        `(begin (struct ,(syntax->datum #'name) ,(syntax->datum #'(vars ...)) #:transparent)
+                                (define (,(syntax->datum #'->html) p)
+                                  (format "~a"
+                                          ,@(syntax->datum #'accessors) ))) )))]))

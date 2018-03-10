@@ -1,0 +1,15 @@
+#lang racket
+;; pict->data-uri : Pict -> String
+(define (pict->data-uri pict)
+  (format "data:image/png;base64,~a"
+          (base64-encode (convert pict 'png-bytes))))
+
+(define my-ip
+  (first (get-ipv4-addrs)))
+
+(define my-ip-qr
+  (qr-write	 	(format "http://~a:8000" my-ip)	 	 	 
+                        "/tmp/share.png"))
+
+(define (my-ip-qr-img)
+  `(img ((src ,(pict->data-uri (bitmap "/tmp/share.png"))))))

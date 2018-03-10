@@ -1,0 +1,23 @@
+#lang racket
+
+(require urlang)
+
+(require (for-syntax racket/syntax))
+
+(define-syntax (register-component stx)
+    (syntax-case stx (init: schema:)
+      [(_ name init: lines ...)
+       
+       #'(register-component name schema: (object ) init: lines ...)]
+      [(_ name schema: obj init: lines ...)
+       (with-syntax ([name-id (format-id stx "~a" (syntax->datum #'name))])
+         #'(urlang
+            (urmodule name-id
+                      (import AFRAME Math this); module name
+                      (AFRAME.registerComponent
+                       name
+                       (object [schema obj]
+                               [init (λ()
+                                       lines ...
+                                       )]
+                               )))))]))

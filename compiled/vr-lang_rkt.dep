@@ -1,0 +1,1 @@
+("6.9" ("0dd3bcc395d0a58e87ac65e44c262c1aa81bec21" . "0c3e307b544f1f9b0ee673deeaafb8e584798c9e") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"my-ip-qr.rkt") (collects #"vr-lang" #"vr.rkt") (collects #"web-server" #"servlet-env.rkt") (collects #"web-server" #"servlet.rkt"))
