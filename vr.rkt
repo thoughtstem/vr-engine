@@ -47,6 +47,7 @@
 (define-attribute dur       (n) "~a")
 (define-attribute repeat    (s) "~a")
 
+(define-attribute material (color opacity metalness roughness) "color: ~a; opacity: ~a; metalness: ~a; roughness: ~a")
 
 (define (attr->html a)
   (list (send a my-name)

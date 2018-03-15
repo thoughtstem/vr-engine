@@ -8,20 +8,19 @@
           (all-from-out "./vr.rkt")
           (all-from-out "./component-definer.rkt")
           (all-from-out "./attribute-definer.rkt")
+
            #%module-begin)
 
 
 (require web-server/servlet
          web-server/servlet-env
-         
+
          "./my-ip-qr.rkt"
          "./component-definer.rkt"
          "./attribute-definer.rkt"
          "./vr.rkt")
 
-  (define (component-imports)
-    (define import (λ(c) `(script ((src ,(string-append c ".js"))))))
-    (map import (hash-keys all-components)))
+
 
   (define (send-to-browser s)
     (define (my-app req)

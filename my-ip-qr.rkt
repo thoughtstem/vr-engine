@@ -9,9 +9,9 @@
          file/convertible)
 
 ;; pict->data-uri : Pict -> String
-  (define (pict->data-uri pict)
-    (format "data:image/png;base64,~a"
-            (base64-encode (convert pict 'png-bytes))))
+(define (pict->data-uri pict)
+  (format "data:image/png;base64,~a"
+          (base64-encode (convert pict 'png-bytes))))
 
 (define my-ip
     (first (get-ipv4-addrs)))

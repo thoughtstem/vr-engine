@@ -1,0 +1,1 @@
+("6.9" ("2ef9ac08532bd5ad38adbb480a7bec702c74bdc1" . "3fb3c706f3361f650ff0347139a5fb83ab6e03f3") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"main.rkt") (collects #"vr-lang" #"vr-lang.rkt"))
