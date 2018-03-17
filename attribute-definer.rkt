@@ -32,10 +32,12 @@
   (string-append (number->string (length (hash-keys all-imgs))) ".png"))
 
 (define (saved-img i)
+  (displayln (string-append "SECOND " (path->string (current-directory))))
   (define file-name (next-filename))
+  (define save-path (string-append (path->string (current-directory)) file-name))
   (hash-set! all-imgs i file-name)
-  (save-image i file-name)
-  file-name)
+  (save-image i save-path)
+  (string-append "./" file-name))
 
 (define (image->filename i)
   (if (hash-has-key? all-imgs i)

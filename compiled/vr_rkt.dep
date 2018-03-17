@@ -1,1 +1,1 @@
-("6.9" ("e05649681022164dc2b85a3237b67f15bb9f23dc" . "5921ededead89907b54aa163d5a27c3601403763") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"attribute-definer.rkt") (collects #"vr-lang" #"component-definer.rkt"))
+("6.9" ("895c34bfba3ad4870d1d92a42dc5c4dce3ee3f46" . "412ac712645e0b8265178c784eae06a83f40015d") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"attribute-definer.rkt") (collects #"vr-lang" #"component-definer.rkt"))

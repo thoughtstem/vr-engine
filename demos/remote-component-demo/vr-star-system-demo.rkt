@@ -1,0 +1,20 @@
+#lang vr-lang
+
+;Here we declare the star-system component
+(register-remote-component star-system "https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js")
+
+(define (my-box n)
+  (box
+   (position -1 n -3)
+   (rotation 0 (* n 10) 0)
+   (color 76 195 (* n 50) 255)))
+ 
+(define my-scene
+  (scene
+   (map my-box (range 10))
+    
+   ;Here we add the star-system component (with no parms) to a basic entity
+   (basic (star-system ""))
+   (sky (color 0 0 0 0))))
+
+(send-to-browser my-scene)
