@@ -12,7 +12,9 @@
          sphere
          plane
          basic
-         scene->html)
+         scene->html
+         make-color
+         light)
 
 (define-namespace-anchor a)
 (define compile-ns (namespace-anchor->namespace a))
@@ -42,6 +44,9 @@
 (define (plane . components)
   (apply (curry make-entity "plane") components))
 
+(define (light . components)
+  (apply (curry make-entity "light") components))
+
 (define (basic . components)
   (apply (curry make-entity "entity") components))
 
@@ -59,12 +64,17 @@
 (define-attribute height (n) "~a")
 (define-attribute width  (n) "~a")
 (define-attribute radius (n) "~a")
+(define-attribute type (s) "~a")
+(define-attribute intensity (n) "~a")
 
 (define-attribute position (x y z) "~a ~a ~a")
 (define-attribute rotation (x y z) "~a ~a ~a")
 (define-attribute scale    (x y z) "~a ~a ~a")
 
 (define-attribute color    (r g b a) "rgba(~a, ~a, ~a, ~a)")
+
+(define (make-color r g b (a 255))
+  (color r g b a))
 
 (define-attribute attribute (s) "~a")
 (define-attribute to        (x y z) "~a ~a ~a")
@@ -73,7 +83,8 @@
 (define-attribute repeat    (s) "~a")
 (define-attribute shadow    () "")
 
-(define-attribute material (color opacity metalness roughness) "color: ~a; opacity: ~a; metalness: ~a; roughness: ~a")
+(define-attribute material (h) "~a")
+
 
 (define (attr->html a)
   (list (send a my-name)

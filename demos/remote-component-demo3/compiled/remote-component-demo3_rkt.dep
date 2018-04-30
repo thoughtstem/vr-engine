@@ -1,1 +1,1 @@
-("6.9" ("ac664602114c11ccfab95a879af8de9a3ccd7f1a" . "bb895a878a0e34c7a908c49ed1593a3e86b642ac") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"main.rkt") (collects #"vr-lang" #"vr-lang.rkt"))
+("6.12" ("ac664602114c11ccfab95a879af8de9a3ccd7f1a" . "7d46b9564e06348b8463c3e814c137ba4958472c") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"main.rkt") (collects #"vr-lang" #"vr-lang.rkt"))
