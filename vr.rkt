@@ -14,13 +14,16 @@
          basic
          scene->html
          make-color
-         light)
+         light
+         camera
+         cursor
+         safe-position)
 
 (define-namespace-anchor a)
 (define compile-ns (namespace-anchor->namespace a))
 
 (struct entity (name attrs children))
-(struct scene (entities))
+(struct scene (entities components))
 
 (define (make-entity name . stuff)
   (define-values
@@ -47,12 +50,26 @@
 (define (light . components)
   (apply (curry make-entity "light") components))
 
+(define (camera . components)
+  (apply (curry make-entity "camera") components))
+
+(define (cursor . components)
+  (apply (curry make-entity "cursor") components))
+
 (define (basic . components)
   (apply (curry make-entity "entity") components))
 
 
-(define (make-scene . entities)
-  (scene entities))
+(define (make-scene . entities-and-components)
+  
+
+  (define (not-entity? e)
+    (not (entity? e)))
+  
+  (define components (filter not-entity? (flatten entities-and-components)))
+  (define entities   (filter entity? (flatten entities-and-components)))
+  (scene entities
+         components))
 
 (define (add-attr e a)
   (struct-copy entity e
@@ -61,13 +78,26 @@
 (define-attribute id  (s) "~a")
 (define-attribute src (s) "~a")
 
+(define-attribute fog (d c) "type: exponential; density: ~a; color: ~a")
+(define-attribute preset (s) "~a")
+(define-attribute material.color (s) "~a")
+(define-attribute raycaster () "")
+
 (define-attribute height (n) "~a")
 (define-attribute width  (n) "~a")
 (define-attribute radius (n) "~a")
 (define-attribute type (s) "~a")
 (define-attribute intensity (n) "~a")
+(define-attribute angle (n) "~a")
+(define-attribute decay (n) "~a")
+(define-attribute ground-color (r g b) "rgb(~a, ~a, ~a)")
 
 (define-attribute position (x y z) "~a ~a ~a")
+
+(define/contract (safe-position x y z)
+  (-> number? number? number? any/c)
+  (position x y z))
+
 (define-attribute rotation (x y z) "~a ~a ~a")
 (define-attribute scale    (x y z) "~a ~a ~a")
 
@@ -104,5 +134,7 @@
       e))
  
 (define (scene->html s)
-  `(a-scene ,@(map entity->html  (map list->entity (scene-entities s)))))
+  `(a-scene
+    (,@(map attr->html (scene-components s)))
+    ,@(map entity->html  (map list->entity (scene-entities s)))))
 

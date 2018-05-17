@@ -6,7 +6,15 @@
 
 (provide (rename-out [make-scene  scene])
          (rename-out [make-entity entity])
-         scene->html)
+         sky
+         box
+         cylinder
+         sphere
+         plane
+         basic
+         scene->html
+         make-color
+         light)
 
 (define-namespace-anchor a)
 (define compile-ns (namespace-anchor->namespace a))
@@ -21,6 +29,28 @@
 
   (entity name attrs children))
 
+(define (sky . components)
+  (apply (curry make-entity "sky") components))
+
+(define (box . components)
+  (apply (curry make-entity "box") components))
+
+(define (cylinder . components)
+  (apply (curry make-entity "cylinder") components))
+
+(define (sphere . components)
+  (apply (curry make-entity "sphere") components))
+
+(define (plane . components)
+  (apply (curry make-entity "plane") components))
+
+(define (light . components)
+  (apply (curry make-entity "light") components))
+
+(define (basic . components)
+  (apply (curry make-entity "entity") components))
+
+
 (define (make-scene . entities)
   (scene entities))
 
@@ -34,6 +64,11 @@
 (define-attribute height (n) "~a")
 (define-attribute width  (n) "~a")
 (define-attribute radius (n) "~a")
+(define-attribute type (s) "~a")
+(define-attribute intensity (n) "~a")
+(define-attribute angle (n) "~a")
+(define-attribute decay (n) "~a")
+(define-attribute ground-color (r g b) "rgb(~a, ~a, ~a)")
 
 (define-attribute position (x y z) "~a ~a ~a")
 (define-attribute rotation (x y z) "~a ~a ~a")
@@ -41,11 +76,17 @@
 
 (define-attribute color    (r g b a) "rgba(~a, ~a, ~a, ~a)")
 
+(define (make-color r g b (a 255))
+  (color r g b a))
+
 (define-attribute attribute (s) "~a")
 (define-attribute to        (x y z) "~a ~a ~a")
 (define-attribute direction (s) "~a")
 (define-attribute dur       (n) "~a")
 (define-attribute repeat    (s) "~a")
+(define-attribute shadow    () "")
+
+(define-attribute material (h) "~a")
 
 
 (define (attr->html a)
@@ -59,7 +100,12 @@
   `( ,(name->html (entity-name e))
      ,(map attr->html (entity-attrs e))
      ,@(map entity->html (entity-children e))))
+
+(define (list->entity e)
+  (if (list? e)
+      (apply basic e)
+      e))
  
 (define (scene->html s)
-  `(a-scene ,@(map entity->html (scene-entities s))))
+  `(a-scene ,@(map entity->html  (map list->entity (scene-entities s)))))
 

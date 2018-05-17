@@ -1,0 +1,1 @@
+("6.12" ("2ccd63e9242da35ba805e866d4fca500525e016b" . "aec3dca65692930aec879855015c5d6a91404d22") (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"vr-lang" #"main.rkt") (collects #"vr-lang" #"vr-lang.rkt"))
