@@ -6,8 +6,10 @@
           (all-from-out web-server/servlet-env)
           (all-from-out "./my-ip-qr.rkt")
           (except-out (all-from-out "./vr.rkt")
-                      color)
-          (rename-out [make-color color])
+                      color
+                      position)
+          (rename-out [make-color color]
+                      [safe-position position])
           (all-from-out "./component-definer.rkt")
           (all-from-out "./attribute-definer.rkt")
           (all-from-out 2htdp/image)
@@ -34,7 +36,7 @@
     (define (my-app req)
       (response/xexpr
        `(html (head (title "Hello world!")
-                    (script ((src "https://aframe.io/releases/0.7.0/aframe.min.js")))
+                    (script ((src "https://aframe.io/aframe/dist/aframe-master.min.js")))
                     ,@(component-imports))
               (body ,(my-ip-qr-img "/main")
                     ,s))))
