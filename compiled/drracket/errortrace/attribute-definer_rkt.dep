@@ -1,1 +1,0 @@
-("6.12" ("e54b096204905d26dd12ff81341dc062eaf88df8" . "6a46caa954049e586765e6776bb728d33eb61c68") (collects #"2htdp" #"image.rkt") (collects #"errortrace" #"errortrace-key.rkt") (collects #"file" #"convertible.rkt") (collects #"net" #"base64.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"racket" #"syntax.rkt"))
