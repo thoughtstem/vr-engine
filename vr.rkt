@@ -8,6 +8,7 @@
          (rename-out [make-entity entity])
          sky
          box
+         animation
          cylinder
          sphere
          plane
@@ -32,6 +33,9 @@
 
 (define (box . components)
   (apply (curry make-entity "box") components))
+
+(define (animation . components)
+  (apply (curry make-entity "animation") components))
 
 (define (cylinder . components)
   (apply (curry make-entity "cylinder") components))
@@ -71,7 +75,10 @@
 (define-attribute direction (s) "~a")
 (define-attribute dur       (n) "~a")
 (define-attribute repeat    (s) "~a")
+(define-attribute fill      (s) "~a")
 (define-attribute shadow    () "")
+
+
 
 (define-attribute material (color opacity metalness roughness) "color: ~a; opacity: ~a; metalness: ~a; roughness: ~a")
 
