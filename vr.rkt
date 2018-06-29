@@ -135,14 +135,8 @@
 (define-attribute fill      (s) "~a")
 (define-attribute shadow    () "")
 
-<<<<<<< HEAD
+(define-attribute material (s) "~a")
 
-
-(define-attribute material (color opacity metalness roughness) "color: ~a; opacity: ~a; metalness: ~a; roughness: ~a")
-=======
-(define-attribute material (h) "~a")
-
->>>>>>> 66ba37b656ea74b4154e31ffca5d2dee85983ddb
 
 (define (attr->html a)
   (list (send a my-name)
