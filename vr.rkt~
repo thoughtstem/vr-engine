@@ -12,12 +12,16 @@
          sphere
          plane
          basic
+<<<<<<< HEAD
+         scene->html)
+=======
          scene->html
          make-color
          light
          camera
          cursor
          safe-position)
+>>>>>>> 66ba37b656ea74b4154e31ffca5d2dee85983ddb
 
 (define-namespace-anchor a)
 (define compile-ns (namespace-anchor->namespace a))
@@ -47,6 +51,8 @@
 (define (plane . components)
   (apply (curry make-entity "plane") components))
 
+<<<<<<< HEAD
+=======
 (define (light . components)
   (apply (curry make-entity "light") components))
 
@@ -56,10 +62,15 @@
 (define (cursor . components)
   (apply (curry make-entity "cursor") components))
 
+>>>>>>> 66ba37b656ea74b4154e31ffca5d2dee85983ddb
 (define (basic . components)
   (apply (curry make-entity "entity") components))
 
 
+<<<<<<< HEAD
+(define (make-scene . entities)
+  (scene entities))
+=======
 (define (make-scene . entities-and-components)
   
 
@@ -70,6 +81,7 @@
   (define entities   (filter entity? (flatten entities-and-components)))
   (scene entities
          components))
+>>>>>>> 66ba37b656ea74b4154e31ffca5d2dee85983ddb
 
 (define (add-attr e a)
   (struct-copy entity e
@@ -129,9 +141,13 @@
 (define-attribute dur       (n) "~a")
 (define-attribute repeat    (s) "~a")
 (define-attribute shadow    () "")
+<<<<<<< HEAD
+=======
 
 (define-attribute material (h) "~a")
+>>>>>>> 66ba37b656ea74b4154e31ffca5d2dee85983ddb
 
+(define-attribute material (color opacity metalness roughness) "color: ~a; opacity: ~a; metalness: ~a; roughness: ~a")
 
 (define (attr->html a)
   (list (send a my-name)
@@ -151,7 +167,11 @@
       e))
  
 (define (scene->html s)
+<<<<<<< HEAD
+  `(a-scene ,@(map entity->html  (map list->entity (scene-entities s)))))
+=======
   `(a-scene
     (,@(map attr->html (scene-components s)))
     ,@(map entity->html  (map list->entity (scene-entities s)))))
+>>>>>>> 66ba37b656ea74b4154e31ffca5d2dee85983ddb
 
