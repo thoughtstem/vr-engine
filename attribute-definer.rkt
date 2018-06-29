@@ -61,10 +61,14 @@
                     [vars/id     (map (λ(s) (format-id stx "~a-~a" #'name s))
                                       (syntax->list #'vars/sym))]
                     [init-fields (map (λ(s) #`(init-field #,(syntax->datum s))) (syntax-e #'(vars ...)))]
-                    [alt-vars    (map (λ(s) (format-id stx "~a-alt" s)) (syntax-e #'(vars ...)))]
+                    [alt-vars    (map (λ(s) (format-id stx "~a-alt" s))
+                                      (syntax-e #'(vars ...)))]
                     [setters     (map list (syntax-e #'(vars ...)) (syntax-e #'alt-vars) )]
                     [accessors   (map (λ(s) #`(dynamic-get-field '#,(syntax->datum s) this)) (syntax-e #'(vars ...)))]
-                    [name-s      (symbol->string (syntax->datum #'name))])
+                    [name-s      (symbol->string (syntax->datum #'name))]
+                    [alt-vars-with-defaults
+                     (map (λ(s) `(,s ""))
+                                      (syntax-e #'alt-vars))])
        #`(begin
            (provide name)
            (define classname
@@ -76,6 +80,6 @@
                (define/public (my-name)
                  (string->symbol name-s))
                (super-new)))
-           (define (name #,@#'alt-vars)
+           (define (name #,@#'alt-vars-with-defaults)
              (new classname #,@#'setters))))]))
 

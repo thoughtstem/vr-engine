@@ -1,1 +1,0 @@
-("6.9" ("22a148fdfe3c6065abb07a18960b6341e6dd1309" . "e69b7e59b6dd4e79932c7b61ab6135b7784bafa1") (collects #"file" #"convertible.rkt") (collects #"hostname" #"main.rkt") (collects #"net" #"base64.rkt") (collects #"pict" #"main.rkt") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"simple-qr" #"main.rkt"))

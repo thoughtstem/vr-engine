@@ -1,1 +1,0 @@
-("6.9" ("4bfe1bfcf3fa735cdeab7e091555d343296db2f3" . "7d16bf12a87929ec5257805d12f0ccfc06ef3bf2") (collects #"racket" #"main.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"racket" #"syntax.rkt") (collects #"urlang" #"main.rkt") (collects #"vr-lang" #"attribute-definer.rkt"))
