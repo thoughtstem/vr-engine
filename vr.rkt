@@ -12,6 +12,7 @@
          cylinder
          sphere
          plane
+         tetrahedron
          basic
          scene->html
          make-color
@@ -50,6 +51,9 @@
 
 (define (plane . components)
   (apply (curry make-entity "plane") components))
+
+(define (tetrahedron . components)
+  (apply (curry make-entity "tetrahedron") components))
 
 (define (light . components)
   (apply (curry make-entity "light") components))
