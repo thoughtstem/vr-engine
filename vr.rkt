@@ -13,6 +13,7 @@
          sphere
          plane
          tetrahedron
+         cone
          basic
          scene->html
          make-color
@@ -54,6 +55,9 @@
 
 (define (tetrahedron . components)
   (apply (curry make-entity "tetrahedron") components))
+
+(define (cone . components)
+  (apply (curry make-entity "cone") components))
 
 (define (light . components)
   (apply (curry make-entity "light") components))
@@ -111,6 +115,9 @@
 (define-attribute height (n) "~a")
 (define-attribute width  (n) "~a")
 (define-attribute radius (n) "~a")
+(define-attribute radius-bottom (n) "~a")
+(define-attribute radius-top (n) "~a")
+
 (define-attribute type (s) "~a")
 (define-attribute intensity (n) "~a")
 (define-attribute angle (n) "~a")
