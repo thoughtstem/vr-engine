@@ -20,7 +20,10 @@
          light
          camera
          cursor
-         safe-position)
+         safe-position
+         assets
+         assets-item
+         obj-model)
 
 (define-namespace-anchor a)
 (define compile-ns (namespace-anchor->namespace a))
@@ -43,6 +46,15 @@
 
 (define (animation . components)
   (apply (curry make-entity "animation") components))
+
+(define (assets . components)
+  (apply (curry make-entity "assets") components))
+
+(define (assets-item . components)
+  (apply (curry make-entity "assets-item") components))
+
+(define (obj-model . components)
+  (apply (curry make-entity "obj-model") components))
 
 (define (cylinder . components)
   (apply (curry make-entity "cylinder") components))
@@ -89,6 +101,7 @@
 
 (define-attribute id  (s) "~a")
 (define-attribute src (s) "~a")
+(define-attribute mtl (s) "~a")
 
 (define-attribute fog (d c) "type: exponential; density: ~a; color: ~a")
 (define-attribute preset (s) "~a")
