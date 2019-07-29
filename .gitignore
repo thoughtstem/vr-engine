@@ -1,1 +1,12 @@
-compiled/*
+compiled/
+*~
+demos/
+doc/
+*.dep
+*.exports
+*.swp
+*.swo
+*.swn
+*.zo
+*.bak
+*.DS_Store
