@@ -1,7 +1,7 @@
 compiled/
 *~
-demos/
-doc/
+demos
+doc
 *.dep
 *.exports
 *.swp
