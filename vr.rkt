@@ -31,7 +31,8 @@
 (struct entity (name attrs children))
 (struct scene (entities components))
 
-(define (make-entity name . stuff)
+;(define (make-entity name . stuff)
+(define (make-entity name stuff)
   (define-values
     (children attrs)
     (partition entity? stuff))
@@ -161,6 +162,10 @@
 
 (define-attribute material (s) "~a")
 
+;-----------
+;(define-attribute begin (s) "~a")
+;-----------
+
 
 (define (attr->html a)
   (list (send a my-name)
@@ -183,4 +188,8 @@
   `(a-scene
     (,@(map attr->html (scene-components s)))
     ,@(map entity->html  (map list->entity (scene-entities s)))))
+
+
+
+
 
