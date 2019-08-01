@@ -6,24 +6,26 @@
 
 (provide (rename-out [make-scene  scene])
          (rename-out [make-entity entity])
-         sky
-         box
-         animation
-         cylinder
-         sphere
-         plane
-         tetrahedron
-         cone
-         basic
+         ;sky
+         ;box
+         ;animation
+         ;cylinder
+         ;sphere
+         ;plane
+         ;tetrahedron
+         ;cone
+         ;basic
          scene->html
          make-color
-         light
-         camera
-         cursor
+         ;light
+         ;camera
+         ;cursor
+         wasd-controls
          safe-position
-         assets
-         assets-item
-         obj-model)
+         ;assets
+         ;assets-item
+         ;obj-model
+         )
 
 (define-namespace-anchor a)
 (define compile-ns (namespace-anchor->namespace a))
@@ -39,6 +41,7 @@
 
   (entity name attrs children))
 
+#|
 (define (sky . components)
   (apply (curry make-entity "sky") components))
 
@@ -80,14 +83,13 @@
 
 (define (cursor . components)
   (apply (curry make-entity "cursor") components))
+|#
+
 
 (define (basic . components)
   (apply (curry make-entity "entity") components))
 
-
 (define (make-scene . entities-and-components)
-  
-
   (define (not-entity? e)
     (not (entity? e)))
   
@@ -163,7 +165,18 @@
 (define-attribute material (s) "~a")
 
 ;-----------
-;(define-attribute begin (s) "~a")
+(define-attribute transparent (b) "~a")
+(define-attribute wasd-controls (s)"~a")
+(define-attribute fly (b) "~a")
+(define-attribute acceleration (n) "~a")
+(define-attribute visible (b) "~a")
+(define-attribute depth  (n) "~a")
+(define-attribute radius-inner (n) "~a")
+(define-attribute radius-outer (n) "~a")
+(define-attribute vertex (x y z) "~a ~a ~a")
+(define-attribute vertex-a (x y z) "~a ~a ~a")
+(define-attribute vertex-b (x y z) "~a ~a ~a")
+(define-attribute vertex-c (x y z) "~a ~a ~a")
 ;-----------
 
 
