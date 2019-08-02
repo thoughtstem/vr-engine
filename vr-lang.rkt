@@ -24,6 +24,10 @@
    basic-plane
    basic-ring
    basic-triangle
+
+   add-stars
+   add-ocean
+   add-particles
    
    animation
    light
@@ -88,6 +92,12 @@
     (define b (h:color-blue c))
     (list r g b))
 
+  (define (color->rgb color)
+    (define r (send color red))
+    (define g (send color blue))
+    (define b (send color green))
+    (list r g b))
+  
   (define preset?
     (or/c 'default 'contact 'egypt 'checkerboard 'forest
           'goaland 'yavapai 'goldmine 'threetowers 'poison
@@ -104,11 +114,11 @@
     (or/c 'checkerboard 'squares 'walkernoise))
   
   ;-------------------------- SCENE
-  (define (vr-scene #:environment            [env '()]
-                    #:sky                    [sky '()]
-                    #:camera                 [cams '()]
-                    #:objects-list           [ents '()]
-                    #:remote-components-list [remotes '()])
+  (define (vr-scene #:environment         [env '()]
+                    #:sky                 [sky '()]
+                    #:camera              [cams '()]
+                    #:objects-list        [ents '()]
+                    #:custom-objects-list [remotes '()])
     
     (define s (append (list env sky cams) ents remotes))
     
@@ -411,6 +421,59 @@
                                  (opacity opac)
                                  (src tex))
                            co)))
+
+  ;-------------------------- CUSTOM OBJECTS
+  (define (add-stars #:position [posn (position 0.0 0.0 0.0)]
+                     #:rotation [rota (rotation 0.0 0.0 0.0)]
+                     #:scale [scale (scale 1.0 1.0 1.0)]
+                     #:color [col "#ffffff"]
+                     #:count [count 10000]
+                     #:depth [dep 300]
+                     #:radius [rad 300]
+                     #:star-size [size 1.0]
+                     #:texture [texture ""])
+    (basic-entity
+     #:components-list (list (star-system (hash "color" col
+                                                "depth" dep
+                                                "radius" rad
+                                                "starSize" size
+                                                "texture" texture))
+                             posn rota scale)))
+
+  (define (add-ocean #:position [posn (position 0.0 0.0 0.0)]
+                     #:rotation [rota (rotation -90.0 0.0 0.0)]
+                     #:scale [scale (scale 1.0 1.0 1.0)]
+                     #:amplitude [amp 0.1]
+                     #:amplitude-variance [amp-var 0.3]
+                     #:color [col "#7AD2F7"]
+                     #:density [den 10]
+                     #:depth [dep 10]
+                     #:opacity [opa 0.8]
+                     #:speed [spe 1.0]
+                     #:speed-variance [spe-var 2.0]
+                     #:width [wid 10])
+    (basic-entity
+     #:components-list (list (ocean (hash "amplitude" amp
+                                          "amplitudeVariance" amp-var
+                                          "color" col
+                                          "density" den
+                                          "depth" dep
+                                          "opacity" opa
+                                          "speed" spe
+                                          "speedVariance" spe-var
+                                          "width" wid))
+                             posn rota scale)))
+
+  (define (add-particles #:position [posn (position 0.0 0.0 0.0)]
+                         #:rotation [rota (rotation -90.0 0.0 0.0)]
+                         #:scale [scale (scale 1.0 1.0 1.0)]
+                         ;#:color [col "white"]
+                         )
+    (basic-entity
+     #:components-list (list (particle-system ;(hash "color" col)
+                                              )
+                             posn rota scale)))
+    
 
   ;-------------------------- OTHERS STUFF??
   (define (animation #:components-list [c '()])
