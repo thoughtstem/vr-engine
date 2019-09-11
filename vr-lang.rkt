@@ -475,7 +475,7 @@
                              posn rota scale)))
     
 
-  ;-------------------------- OTHERS STUFF??
+  ;-------------------------- OTHER STUFF??
   (define (animation #:components-list [c '()])
     (entity "animation" c))
 
