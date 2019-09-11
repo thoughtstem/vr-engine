@@ -70,7 +70,8 @@
                      (map (λ(s) `(,s ""))
                                       (syntax-e #'alt-vars))])
        #`(begin
-           (provide name)
+           (provide name
+                    classname)
            (define classname
              (class object%
                #,@#'init-fields
