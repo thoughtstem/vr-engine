@@ -130,6 +130,7 @@
                              #:dressing-amount       [amount #f]
                              #:dressing-color        [color #f]
                              #:dressing-scale        [scale #f]
+                             #:dressing-variance     [variance #f]
                              #:dressing-on-play-area [play-area #f]
                              #:fog                   [fog #f]
                              #:ground                [ground #f]
@@ -144,6 +145,7 @@
                       "dressingAmount" amount
                       "dressingColor"  color
                       "dressingScale"  scale
+                      "dressingVariance" (and variance (send variance render))
                       "fog"            fog
                       "ground"         (~a ground)
                       "groundColor"    color-1

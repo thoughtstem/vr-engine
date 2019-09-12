@@ -155,6 +155,7 @@
 
 (define-attribute rotation (x y z) "~a ~a ~a")
 (define-attribute scale    (x y z) "~a ~a ~a")
+(define-attribute variance (x y z) "~a ~a ~a")
 
 (define-attribute color    (r g b a) "rgba(~a, ~a, ~a, ~a)")
 
