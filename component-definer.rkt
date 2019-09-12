@@ -103,12 +103,12 @@
 (register-remote-component event-set__mouseleave "https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js")
 (register-remote-component random-bounce         "https://ts-ballpit-complete.glitch.me/randomizer.js")
 (register-remote-component random-color          "https://ts-ballpit-complete.glitch.me/randomizer.js")
-(register-remote-component random-position "https://ts-ballpit-complete.glitch.me/randomizer.js")
+(register-remote-component random-position       "https://ts-ballpit-complete.glitch.me/randomizer.js")
 
-(register-component random-color2
+;Not needed?
+#|(register-component random-color2
                     init:
                     (var (randR (Math.floor (* (Math.random) 255)))
                          (randG (Math.floor (* (Math.random) 255)))
                          (randB (Math.floor (* (Math.random) 255))))
-                    (this.el.setAttribute "color" (+ "rgb(" randR "," randG "," randB ")" )))
-;----------------------------------
+                    (this.el.setAttribute "color" (+ "rgb(" randR "," randG "," randB ")" ))) |#
