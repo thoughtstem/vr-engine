@@ -6,4 +6,4 @@
                "simple-qr"
                "urlang"))
 
-(define scribblings '(("vr-lang.scrbl" ())))
+(define scribblings '(("scribblings/manual.scrbl" (multi-page))))
