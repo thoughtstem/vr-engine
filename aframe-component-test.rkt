@@ -1,4 +1,4 @@
-#lang vr-lang
+#lang vr-engine
 
 #;(
 (register-component "random-color"

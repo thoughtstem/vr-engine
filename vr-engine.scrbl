@@ -1,6 +1,6 @@
 #lang scribble/manual
  
-@title{vr-lang}
+@title{vr-engine}
 
 This language allows declarative specification of virtual reality scenes and games.
 
@@ -11,7 +11,7 @@ The intention of this language is to wrap up A-frame and provide a more convenie
 specifying VR scenes.  For example, here's a basic "Hello world" example:
 
 @codeblock|{
- #lang vr-lang
+ #lang vr-engine
  
  (define my-scene
    (scene
@@ -34,13 +34,13 @@ running VR scene.  It will also provide a convenient QR code for you to scan on 
 
 @image[#:scale 0.5]{./doc-images/hello-world.png}
 
-Things get even better, though because vr-lang is embedded in Racket, meaning you get full access
+Things get even better, though because vr-engine is embedded in Racket, meaning you get full access
 to Racket if you want to procedurally generate parts of your VR scene.
 
 Here we "functionalize" the box in the above program:
 
 @codeblock|{
- #lang vr-lang
+ #lang vr-engine
 
   (define (my-box n)
     (box
@@ -65,7 +65,7 @@ Here we "functionalize" the box in the above program:
 Or go crazy with higher-order functions:
 
 @codeblock|{
- #lang vr-lang
+ #lang vr-engine
 
  (define (my-box n)
    (box
@@ -84,12 +84,12 @@ Or go crazy with higher-order functions:
 
 @image[#:scale 0.5]{./doc-images/hello-world3.png}
 
-You can also extend vr-lang with remote components (written in JavaScript by other
+You can also extend vr-engine with remote components (written in JavaScript by other
 A-frame developers).
 
 
 @codeblock|{
- #lang vr-lang
+ #lang vr-engine
 
  ;Here we declare the star-system component
  (register-remote-component star-system "https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js")
@@ -119,7 +119,7 @@ params (https://www.npmjs.com/package/aframe-star-system-component).  We can spe
 Racket hashes.
 
 @codeblock|{
-#lang vr-lang
+#lang vr-engine
 
 ;Here we declare the star-system component
 (register-remote-component star-system "https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js")
@@ -146,7 +146,7 @@ Racket hashes.
 
 @image[#:scale 0.5]{./doc-images/star-system-demo2.png}
 
-Notice that one of the key value pairs above is the texture for the stars.  This is a good time to mention that vr-lang
+Notice that one of the key value pairs above is the texture for the stars.  This is a good time to mention that vr-engine
 is pretty cool when it comes to images.  You can specify in the normal (boring) way like above.  Or you can procedurally
 generate the images in-line using the 2htdp/image library.
 
@@ -155,7 +155,7 @@ NOTE: This works ANYWHERE that you could specify an image url.
 We can alter the code above slightly to demonstrate this...
 
 @codeblock|{
-#lang vr-lang
+#lang vr-engine
 
 ;Here we declare the star-system component
 (register-remote-component star-system "https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js")
@@ -206,7 +206,7 @@ So here we'll make a random-color component that picks a different random color 
 boxes whenever the page loads.  Fun!
 
 @codeblock|{
-#lang vr-lang
+#lang vr-engine
 
 (register-component random-color
                     init:

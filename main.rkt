@@ -1,4 +1,4 @@
 #lang racket
 
 (module reader syntax/module-reader
-  vr-engine/vr-lang)
+  vr-engine/vr-engine)

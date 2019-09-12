@@ -6,4 +6,4 @@
                "simple-qr"
                "urlang"))
 
-(define scribblings '(("vr-lang.scrbl" ())))
+(define scribblings '(("vr-engine.scrbl" ())))

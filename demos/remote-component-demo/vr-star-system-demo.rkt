@@ -1,4 +1,4 @@
-#lang vr-lang
+#lang vr-engine
 
 ;Here we declare the star-system component
 (register-remote-component star-system "https://cdn.rawgit.com/matthewbryancurtis/aframe-star-system-component/db4f1030/index.js")
