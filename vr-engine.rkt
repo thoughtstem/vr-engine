@@ -126,31 +126,35 @@
 
   ;-------------------------- ENVIRONMENTS
   (define (basic-environment #:preset                [preset 'default]
-                             #:dressing              [dressing 'none]
-                             #:dressing-amount       [amount 0]
-                             #:dressing-color        [color "white"]
-                             #:dressing-scale        [scale 1]
-                             #:dressing-on-play-area [play-area 0.0]
-                             #:fog                   [fog 0.800]
-                             #:ground                [ground 'flat]
-                             #:ground-color-1        [color-1 "#454545"]
-                             #:ground-color-2        [color-2 "#5d5d5d"]
-                             #:ground-texture        [texture 'checkerboard]
-                             #:horizon-color         [horizon "#dddddd"]
+                             #:dressing              [dressing #f]
+                             #:dressing-amount       [amount #f]
+                             #:dressing-color        [color #f]
+                             #:dressing-scale        [scale #f]
+                             #:dressing-on-play-area [play-area #f]
+                             #:fog                   [fog #f]
+                             #:ground                [ground #f]
+                             #:ground-color-1        [color-1 #f]
+                             #:ground-color-2        [color-2 #f]
+                             #:ground-texture        [texture #f]
+                             #:horizon-color         [horizon #f]
                              #:other-components-list [comps '()])
+    (define env-hash (hash
+                      "preset"         (~a preset)
+                      "dressing"       (~a dressing)
+                      "dressingAmount" amount
+                      "dressingColor"  color
+                      "dressingScale"  scale
+                      "fog"            fog
+                      "ground"         (~a ground)
+                      "groundColor"    color-1
+                      "groundColor-2"   color-2
+                      "groundTexture"  (~a texture)
+                      "horizonColor"   horizon))
+    (define env (environment (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
+                                                              (equal? (cdr p) "#f")))
+                                                    (hash->list env-hash)))))
     (basic-entity
-     #:components-list (list (environment (hash
-                                           "preset"         (~a preset)
-                                           "dressing"       (~a dressing)
-                                           "dressingAmount" amount
-                                           "dressingColor"  color
-                                           "dressingScale"  scale
-                                           "fog"            fog
-                                           "ground"         (~a ground)
-                                           "groundColor"    color-1
-                                           "groundColor-2"   color-2
-                                           "groundTexture"  (~a texture)
-                                           "horizonColor"   horizon)))))
+     #:components-list (list env)))
 
   (define (basic-forest #:preset          [preset 'forest]
                         #:dressing        [dressing 'trees]
