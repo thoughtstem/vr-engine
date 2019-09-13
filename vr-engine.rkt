@@ -68,13 +68,13 @@
       [(_ s)
        #'(send-html-to-browser (scene->html s))]))
 
-  (define-runtime-path assets-path "assets")
+  (define-runtime-path pkg-js-path "js")
   
   (define (send-html-to-browser s)
     (displayln (~a (current-directory)))
-    (define js-path (build-path (current-directory) "js"))
-    (delete-directory/files js-path #:must-exist? #f)
-    (copy-directory/files assets-path js-path)
+    (define current-js-path (build-path (current-directory) "js"))
+    (delete-directory/files current-js-path #:must-exist? #f)
+    (copy-directory/files pkg-js-path current-js-path)
     (define (my-app req)
       (response/xexpr
        `(html (head (title "Hello world!")
@@ -507,7 +507,19 @@
   (define (basic-entity #:components-list [c '()])
     (entity "entity" c))
 
+  ; ===== 3D MODEL ASSETS =====
+  ; TODO: move to a seperatate assets file without cyclic require error!
+  (provide carlos-model)
   
+  (define-runtime-path carlos-obj-path "assets/carlos_head.obj")
+  (define-runtime-path carlos-mtl-path "assets/carlos_head.mtl")
 
+  (define carlos-model
+    (obj-model #:components-list
+               (list (src carlos-obj-path)
+                     (mtl carlos-mtl-path)
+                     (position 0 0 0)
+                     (rotation -90 0 0))))
+
+  
   )
-

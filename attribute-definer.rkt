@@ -44,10 +44,18 @@
       (hash-ref all-imgs i)
       (saved-img i)))
 
+(define (path->filename p)
+  (define file-name (path->string (file-name-from-path p)))
+  (define save-path (build-path (current-directory) file-name))
+  ;(delete-directory/files build-assets-path #:must-exist? #f) ;TODO delete and save to assets folder
+  (copy-file p save-path #t)
+  file-name)
+
 (define (convert-attr attr)
   (cond [(hash? attr) (string-join (map (λ(x) (format "~a:~a" (car x) (convert-attr (cdr x))))
                                         (hash->list attr)) ";")]
         [(image? attr) (image->filename attr)]
+        [(path? attr) (path->filename attr)]
         [else attr]))
 
 (define (convert-attrs . attrs)
