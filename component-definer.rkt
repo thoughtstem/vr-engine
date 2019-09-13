@@ -5,7 +5,8 @@
          component-imports
          all-components
          (all-from-out urlang)
-         tester-define)
+         tester-define
+         remote-url->local-url)
 
 (require "./attribute-definer.rkt")
 
@@ -43,13 +44,16 @@
                                  ))))))]))
 
 
+(define (remote-url->local-url str)
+  (~a "js/" (last (string-split str "/"))))
+
 (define-syntax (register-remote-component stx)
     (syntax-case stx ()
       [(_ name path)
        (with-syntax ([name-s (symbol->string (syntax->datum #'name))]
                      [->html (format-id stx "~a->html" #'name)])
          #`(begin
-             (hash-set! all-components name-s path)
+             (hash-set! all-components name-s (remote-url->local-url path))
              (define-attribute name (data-string) "~a")))]
       [(_ name)
        (with-syntax ([path (format "https://unpkg.com/aframe-~a-component/dist/aframe-~a-component.min.js"
@@ -103,12 +107,12 @@
 (register-remote-component event-set__mouseleave "https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js")
 (register-remote-component random-bounce         "https://ts-ballpit-complete.glitch.me/randomizer.js")
 (register-remote-component random-color          "https://ts-ballpit-complete.glitch.me/randomizer.js")
-(register-remote-component random-position "https://ts-ballpit-complete.glitch.me/randomizer.js")
+(register-remote-component random-position       "https://ts-ballpit-complete.glitch.me/randomizer.js")
 
-(register-component random-color2
+;Not needed?
+#|(register-component random-color2
                     init:
                     (var (randR (Math.floor (* (Math.random) 255)))
                          (randG (Math.floor (* (Math.random) 255)))
                          (randB (Math.floor (* (Math.random) 255))))
-                    (this.el.setAttribute "color" (+ "rgb(" randR "," randG "," randB ")" )))
-;----------------------------------
+                    (this.el.setAttribute "color" (+ "rgb(" randR "," randG "," randB ")" ))) |#

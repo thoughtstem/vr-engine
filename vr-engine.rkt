@@ -50,7 +50,8 @@
    (all-from-out 2htdp/image)
    #%module-begin)
 
-  (require web-server/servlet
+  (require racket/runtime-path
+           web-server/servlet
            web-server/servlet-env
            (prefix-in h: 2htdp/image)
            "./my-ip-qr.rkt"
@@ -67,11 +68,17 @@
       [(_ s)
        #'(send-html-to-browser (scene->html s))]))
 
+  (define-runtime-path pkg-js-path "js")
+  
   (define (send-html-to-browser s)
+    (displayln (~a (current-directory)))
+    (define current-js-path (build-path (current-directory) "js"))
+    (delete-directory/files current-js-path #:must-exist? #f)
+    (copy-directory/files pkg-js-path current-js-path)
     (define (my-app req)
       (response/xexpr
        `(html (head (title "Hello world!")
-                    (script ((src "https://aframe.io/aframe/dist/aframe-master.min.js")))
+                    (script ((src ,(remote-url->local-url "https://aframe.io/aframe/dist/aframe-master.min.js"))))
                     ,@(component-imports))
               (body ,(my-ip-qr-img "/main")
                     ,s))))
@@ -126,31 +133,37 @@
 
   ;-------------------------- ENVIRONMENTS
   (define (basic-environment #:preset                [preset 'default]
-                             #:dressing              [dressing 'none]
-                             #:dressing-amount       [amount 0]
-                             #:dressing-color        [color "white"]
-                             #:dressing-scale        [scale 1]
-                             #:dressing-on-play-area [play-area 0.0]
-                             #:fog                   [fog 0.800]
-                             #:ground                [ground 'flat]
-                             #:ground-color-1        [color-1 "#454545"]
-                             #:ground-color-2        [color-2 "#5d5d5d"]
-                             #:ground-texture        [texture 'checkerboard]
-                             #:horizon-color         [horizon "#dddddd"]
+                             #:dressing              [dressing #f]
+                             #:dressing-amount       [amount #f]
+                             #:dressing-color        [color #f]
+                             #:dressing-scale        [scale #f]
+                             #:dressing-variance     [variance #f]
+                             #:dressing-on-play-area [play-area #f]
+                             #:fog                   [fog #f]
+                             #:ground                [ground #f]
+                             #:ground-color-1        [color-1 #f]
+                             #:ground-color-2        [color-2 #f]
+                             #:ground-texture        [texture #f]
+                             #:horizon-color         [horizon #f]
                              #:other-components-list [comps '()])
+    (define env-hash (hash
+                      "preset"         (~a preset)
+                      "dressing"       (~a dressing)
+                      "dressingAmount" amount
+                      "dressingColor"  color
+                      "dressingScale"  scale
+                      "dressingVariance" (and variance (send variance render))
+                      "fog"            fog
+                      "ground"         (~a ground)
+                      "groundColor"    color-1
+                      "groundColor-2"   color-2
+                      "groundTexture"  (~a texture)
+                      "horizonColor"   horizon))
+    (define env (environment (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
+                                                              (equal? (cdr p) "#f")))
+                                                    (hash->list env-hash)))))
     (basic-entity
-     #:components-list (list (environment (hash
-                                           "preset"         (~a preset)
-                                           "dressing"       (~a dressing)
-                                           "dressingAmount" amount
-                                           "dressingColor"  color
-                                           "dressingScale"  scale
-                                           "fog"            fog
-                                           "ground"         (~a ground)
-                                           "groundColor"    color-1
-                                           "groundColor-2"   color-2
-                                           "groundTexture"  (~a texture)
-                                           "horizonColor"   horizon)))))
+     #:components-list (list env)))
 
   (define (basic-forest #:preset          [preset 'forest]
                         #:dressing        [dressing 'trees]
@@ -494,7 +507,19 @@
   (define (basic-entity #:components-list [c '()])
     (entity "entity" c))
 
+  ; ===== 3D MODEL ASSETS =====
+  ; TODO: move to a seperatate assets file without cyclic require error!
+  (provide carlos-model)
   
+  (define-runtime-path carlos-obj-path "assets/carlos_head.obj")
+  (define-runtime-path carlos-mtl-path "assets/carlos_head.mtl")
 
+  (define carlos-model
+    (obj-model #:components-list
+               (list (src carlos-obj-path)
+                     (mtl carlos-mtl-path)
+                     (position 0 0 0)
+                     (rotation -90 0 0))))
+
+  
   )
-

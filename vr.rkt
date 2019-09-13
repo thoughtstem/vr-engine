@@ -6,6 +6,9 @@
 
 (provide (rename-out [make-scene  scene])
          (rename-out [make-entity entity])
+         (except-out (struct-out entity)
+                     entity)
+         update-attributes
          ;sky
          ;box
          ;animation
@@ -25,6 +28,7 @@
          ;assets
          ;assets-item
          ;obj-model
+         ;position%
          )
 
 (define-namespace-anchor a)
@@ -40,6 +44,9 @@
     (partition entity? stuff))
 
   (entity name attrs children))
+
+(define (update-attributes e new-attrs)
+  (struct-copy entity e [attrs new-attrs]))
 
 #|
 (define (sky . components)
@@ -148,6 +155,7 @@
 
 (define-attribute rotation (x y z) "~a ~a ~a")
 (define-attribute scale    (x y z) "~a ~a ~a")
+(define-attribute variance (x y z) "~a ~a ~a")
 
 (define-attribute color    (r g b a) "rgba(~a, ~a, ~a, ~a)")
 
