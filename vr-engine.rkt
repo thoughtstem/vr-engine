@@ -478,13 +478,27 @@
                              posn rota scale)))
 
   (define (add-particles #:position [posn (position 0.0 0.0 0.0)]
-                         #:rotation [rota (rotation -90.0 0.0 0.0)]
-                         #:scale [scale (scale 1.0 1.0 1.0)]
-                         ;#:color [col "white"]
+                         #:rotation [rota (rotation 0.0 0.0 0.0)]
+                         #:scale    [scale (scale 1.0 1.0 1.0)]
+                         #:preset   [preset 'default]
+                         #:texture  [texture #f]
+                         #:size     [size    #f]
+                         #:speed    [speed #f]
+                         #:color    [col #f]
                          )
+    (define p-hash (hash
+                    "preset"  (~a preset)
+                    "texture" texture
+                    "size"    size
+                    "velocityValue"       (and speed "0 5 0")
+                    "accelerationValue"   (and speed (~a 0 (- speed) 0 #:separator " "))
+                    "accelerationSpread"  (and speed (~a speed 0 speed #:separator " "))
+                    "color"   col))
+    (define p-system (particle-system (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
+                                                                       (equal? (cdr p) "#f")))
+                                                             (hash->list p-hash)))))
     (basic-entity
-     #:components-list (list (particle-system ;(hash "color" col)
-                                              )
+     #:components-list (list p-system
                              posn rota scale)))
     
 
