@@ -5,7 +5,8 @@
          component-imports
          all-components
          (all-from-out urlang)
-         tester-define)
+         tester-define
+         remote-url->local-url)
 
 (require "./attribute-definer.rkt")
 
@@ -43,13 +44,16 @@
                                  ))))))]))
 
 
+(define (remote-url->local-url str)
+  (~a "js/" (last (string-split str "/"))))
+
 (define-syntax (register-remote-component stx)
     (syntax-case stx ()
       [(_ name path)
        (with-syntax ([name-s (symbol->string (syntax->datum #'name))]
                      [->html (format-id stx "~a->html" #'name)])
          #`(begin
-             (hash-set! all-components name-s path)
+             (hash-set! all-components name-s (remote-url->local-url path))
              (define-attribute name (data-string) "~a")))]
       [(_ name)
        (with-syntax ([path (format "https://unpkg.com/aframe-~a-component/dist/aframe-~a-component.min.js"

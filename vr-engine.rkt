@@ -50,7 +50,8 @@
    (all-from-out 2htdp/image)
    #%module-begin)
 
-  (require web-server/servlet
+  (require racket/runtime-path
+           web-server/servlet
            web-server/servlet-env
            (prefix-in h: 2htdp/image)
            "./my-ip-qr.rkt"
@@ -67,11 +68,17 @@
       [(_ s)
        #'(send-html-to-browser (scene->html s))]))
 
+  (define-runtime-path assets-path "assets")
+  
   (define (send-html-to-browser s)
+    (displayln (~a (current-directory)))
+    (define js-path (build-path (current-directory) "js"))
+    (delete-directory/files js-path #:must-exist? #f)
+    (copy-directory/files assets-path js-path)
     (define (my-app req)
       (response/xexpr
        `(html (head (title "Hello world!")
-                    (script ((src "https://aframe.io/aframe/dist/aframe-master.min.js")))
+                    (script ((src ,(remote-url->local-url "https://aframe.io/aframe/dist/aframe-master.min.js"))))
                     ,@(component-imports))
               (body ,(my-ip-qr-img "/main")
                     ,s))))
