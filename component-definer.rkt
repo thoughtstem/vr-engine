@@ -108,6 +108,7 @@
 (register-remote-component random-bounce         "https://ts-ballpit-complete.glitch.me/randomizer.js")
 (register-remote-component random-color          "https://ts-ballpit-complete.glitch.me/randomizer.js")
 (register-remote-component random-position       "https://ts-ballpit-complete.glitch.me/randomizer.js")
+(register-remote-component animation-mixer       "https://unpkg.com/aframe-extras.animation-mixer@3.13.1/dist/aframe-extras.animation-mixer.min.js")
 
 ;Not needed?
 #|(register-component random-color2

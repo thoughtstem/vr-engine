@@ -521,19 +521,49 @@
   (define (basic-entity #:components-list [c '()])
     (entity "entity" c))
 
+  (define (gltf-model #:components-list [c '()])
+    (entity "gltf-model" c))
+
   ; ===== 3D MODEL ASSETS =====
-  ; TODO: move to a seperatate assets file without cyclic require error!
+  ; TODO: move this section to a seperatate assets file without cyclic require error!
+
+  ; CARLOS BUST (618 KB)
+  ; Credit: figure of Carlos Hererra scanned and edited by aBlender using Microsoft Kinect V2.
+  ; Todo: convert to a single glb file
   (provide carlos-model)
   
   (define-runtime-path carlos-obj-path "assets/carlos_head.obj")
   (define-runtime-path carlos-mtl-path "assets/carlos_head.mtl")
-
   (define carlos-model
     (obj-model #:components-list
                (list (src carlos-obj-path)
                      (mtl carlos-mtl-path)
-                     (position 0 0 0)
                      (rotation -90 0 0))))
 
-  
+  ; ALIEN PLANT (19 MB)
+  ; Credit: ...
+  ; Todo: remove or reduce polygons, it's 19 MiB!
+  (provide alien-plant-1)
+  (define-runtime-path alien-plant-1-gltf-path "assets/alien-plant-1.glb")
+  (define alien-plant-1
+    (gltf-model #:components-list
+               (list (src alien-plant-1-gltf-path)
+                     (scale 0.2 0.2 0.2))))
+
+  ; ALIENT PLANT 2 (7 MB)
+  (provide alien-plant-2)
+  (define-runtime-path alien-plant-2-gltf-path "assets/alien-plant-2.glb")
+  (define alien-plant-2
+    (gltf-model #:components-list
+               (list (src alien-plant-2-gltf-path))))
+
+  ; BABY CACTUS (7 MB, ANIMATED)
+  ; Credit: pixipui - https://sketchfab.com/3d-models/baby-cactus-2a403b03dbf64f1fb34cf35a295ba8b6
+  (provide baby-cactus)
+  (define-runtime-path baby-cactus-gltf-path "assets/baby-cactus.glb")
+  (define baby-cactus
+    (gltf-model #:components-list
+               (list (src baby-cactus-gltf-path)
+                     (animation-mixer))))
+
   )
