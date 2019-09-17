@@ -566,4 +566,57 @@
                (list (src baby-cactus-gltf-path)
                      (animation-mixer))))
 
+  ; BUNNY RABBIT (20.5 MB, ANIMATED)
+  ; Credit: DarkLordFlash - https://sketchfab.com/3d-models/animated-bunny-rabbit-critter-free-l-poly-3f8b61e440fe43059226a57f269b9b53
+  (provide bunny-rabbit)
+  (define-runtime-path bunny-rabbit-gltf-path "assets/bunny-rabbit.glb")
+  (define bunny-rabbit
+    (gltf-model #:components-list
+                (list (src bunny-rabbit-gltf-path)
+                      (animation-mixer)
+                      (scale 0.05 0.05 0.05))))
+
+  ; BIRD (1.3 MB, ANIMATED)
+  ; Credit: Charlie Tinley - https://sketchfab.com/3d-models/low-poly-bird-animated-82ada91f0ac64ab595fbc3dc994a3590
+  (provide bird)
+  (define-runtime-path bird-gltf-path "assets/bird.glb")
+  (define bird
+    (gltf-model #:components-list
+                (list (src bird-gltf-path)
+                      (animation-mixer))))
+
+  ; MAGIC STONE (29 MB, ANIMATED)
+  ; Credit: Rafi Azhar - https://sketchfab.com/3d-models/magic-stone-e932cbae15854c1eac01a192313c9942
+  (provide magic-stone)
+  (define-runtime-path magic-stone-gltf-path "assets/magic-stone.glb")
+  (define magic-stone
+    (gltf-model #:components-list
+                (list (src magic-stone-gltf-path)
+                      (animation-mixer))))
+  
+  ; WILLOW TREE (24 MB, ANIMATED?)
+  ; Credit: adam127 - https://sketchfab.com/3d-models/weeping-willow-tree-48c090ce93d543cf8b19d3c6f2b6788a
+  (provide willow-tree)
+  (define-runtime-path willow-tree-gltf-path "assets/willow-tree.glb")
+  (define willow-tree
+    (gltf-model #:components-list
+                (list (src willow-tree-gltf-path)
+                      (animation-mixer)
+                      (scale 0.05 0.05 0.05))))
+
+  ; THOUGHTSTEM LOGO (378 KB)
+  ; Credit: ThoughSTEM LLC
+  (provide thoughtstem-logo)
+  (define-runtime-path thoughtstem-logo-gltf-path "assets/thoughtstem-logo.glb")
+  (define thoughtstem-logo
+    (gltf-model #:components-list
+                (list (src thoughtstem-logo-gltf-path))))
+
+  ; SWORD (61 KB)
+  ; Credit: aBlender
+  (provide sword)
+  (define-runtime-path sword-gltf-path "assets/sword.glb")
+  (define sword
+    (gltf-model #:components-list
+                (list (src sword-gltf-path))))
   )
