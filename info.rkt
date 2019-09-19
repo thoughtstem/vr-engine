@@ -4,6 +4,8 @@
 
 (define deps '("hostname"
                "simple-qr"
-               "urlang"))
+               "urlang"
+               "define-assets-from"
+               ))
 
 (define scribblings '(("scribblings/manual.scrbl" (multi-page))))

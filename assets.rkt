@@ -1,6 +1,6 @@
 #lang at-exp racket
 
-(require ts-kata-util/assets/main
+(require define-assets-from
          vr-engine)
 
 (define-assets-from "assets")
