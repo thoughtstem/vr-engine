@@ -34,6 +34,9 @@
    assets
    assets-item
    obj-model
+
+   gltf-model
+
    ;--------------
    (all-from-out racket)
    (all-from-out web-server/servlet)
