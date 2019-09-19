@@ -106,7 +106,7 @@
 (register-remote-component event-set__mouseenter "https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js")
 (register-remote-component event-set__mouseleave "https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js")
 (register-remote-component random-bounce         "https://ts-ballpit-complete.glitch.me/randomizer.js")
-(register-remote-component random-color          "https://ts-ballpit-complete.glitch.me/randomizer.js")
+(register-remote-component random-color-js          "https://ts-ballpit-complete.glitch.me/randomizer.js")
 (register-remote-component random-position       "https://ts-ballpit-complete.glitch.me/randomizer.js")
 (register-remote-component animation-mixer       "https://unpkg.com/aframe-extras.animation-mixer@3.13.1/dist/aframe-extras.animation-mixer.min.js")
 

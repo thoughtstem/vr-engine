@@ -14,8 +14,9 @@
 
 (require 2htdp/image
          ;pict
-         net/base64
-         file/convertible)
+         ;net/base64
+         ;file/convertible
+         )
 
 (define-for-syntax (repeat-str s n)
   (map (thunk* s) (range n)))
