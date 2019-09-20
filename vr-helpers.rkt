@@ -99,6 +99,22 @@
     
     (send-to-browser (scene s)))
 
+ ;-------------------------- SOME FUNCTIONS
+ (define preset?
+    (or/c 'default 'contact 'egypt 'checkerboard 'forest
+          'goaland 'yavapai 'goldmine 'threetowers 'poison
+          'arches 'tron 'japan 'dream 'volcano 'starry 'osiris))
+
+  (define dressing?
+    (or/c 'cubes 'pyramids 'cylinders 'towers 'mushrooms
+          'trees 'apparatus 'torii 'none))
+
+  (define ground?
+    (or/c 'flat 'hills 'canyon 'spikes 'noise))
+
+  (define texture?
+    (or/c 'checkerboard 'squares 'walkernoise))
+
   ;-------------------------- ENVIRONMENTS
   (define (basic-environment #:preset                [preset 'default]
                              #:dressing              [dressing #f]
