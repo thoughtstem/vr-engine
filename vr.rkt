@@ -9,26 +9,10 @@
          (except-out (struct-out entity)
                      entity)
          update-attributes
-         ;sky
-         ;box
-         ;animation
-         ;cylinder
-         ;sphere
-         ;plane
-         ;tetrahedron
-         ;cone
-         ;basic
          scene->html
          make-color
-         ;light
-         ;camera
-         ;cursor
          wasd-controls
          safe-position
-         ;assets
-         ;assets-item
-         ;obj-model
-         ;position%
          )
 
 (define-namespace-anchor a)
@@ -47,51 +31,6 @@
 
 (define (update-attributes e new-attrs)
   (struct-copy entity e [attrs new-attrs]))
-
-#|
-(define (sky . components)
-  (apply (curry make-entity "sky") components))
-
-(define (box . components)
-  (apply (curry make-entity "box") components))
-
-(define (animation . components)
-  (apply (curry make-entity "animation") components))
-
-(define (assets . components)
-  (apply (curry make-entity "assets") components))
-
-(define (assets-item . components)
-  (apply (curry make-entity "assets-item") components))
-
-(define (obj-model . components)
-  (apply (curry make-entity "obj-model") components))
-
-(define (cylinder . components)
-  (apply (curry make-entity "cylinder") components))
-
-(define (sphere . components)
-  (apply (curry make-entity "sphere") components))
-
-(define (plane . components)
-  (apply (curry make-entity "plane") components))
-
-(define (tetrahedron . components)
-  (apply (curry make-entity "tetrahedron") components))
-
-(define (cone . components)
-  (apply (curry make-entity "cone") components))
-
-(define (light . components)
-  (apply (curry make-entity "light") components))
-
-(define (camera . components)
-  (apply (curry make-entity "camera") components))
-
-(define (cursor . components)
-  (apply (curry make-entity "cursor") components))
-|#
-
 
 (define (basic . components)
   (apply (curry make-entity "entity") components))
