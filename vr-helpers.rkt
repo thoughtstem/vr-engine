@@ -44,12 +44,13 @@
  (require racket/runtime-path
            web-server/servlet
            web-server/servlet-env
-           ;(prefix-in h: 2htdp/image)
+           (prefix-in h: 2htdp/image)
            "./my-ip-qr.rkt"
            "./component-definer.rkt"
-           ;"./attribute-definer.rkt"
+           "./attribute-definer.rkt"
            "./vr.rkt"
            ;"./assets.rkt"
+           image-colors
            )
 
 
@@ -100,20 +101,68 @@
     (send-to-browser (scene s)))
 
  ;-------------------------- SOME FUNCTIONS
- (define preset?
-    (or/c 'default 'contact 'egypt 'checkerboard 'forest
-          'goaland 'yavapai 'goldmine 'threetowers 'poison
-          'arches 'tron 'japan 'dream 'volcano 'starry 'osiris))
+(define preset?
+  (or/c 'default 'contact 'egypt 'checkerboard 'forest
+        'goaland 'yavapai 'goldmine 'threetowers 'poison
+        'arches 'tron 'japan 'dream 'volcano 'starry 'osiris))
 
-  (define dressing?
-    (or/c 'cubes 'pyramids 'cylinders 'towers 'mushrooms
-          'trees 'apparatus 'torii 'none))
+(define dressing?
+  (or/c 'cubes 'pyramids 'cylinders 'towers 'mushrooms
+        'trees 'apparatus 'torii 'none))
 
-  (define ground?
-    (or/c 'flat 'hills 'canyon 'spikes 'noise))
+(define ground?
+  (or/c 'flat 'hills 'canyon 'spikes 'noise))
 
-  (define texture?
-    (or/c 'checkerboard 'squares 'walkernoise))
+(define texture?
+  (or/c 'checkerboard 'squares 'walkernoise))
+
+(define (any-color-stx->rgb-list x)
+  (cond
+    [(string? x)(if (char=? #\# (string-ref x 0))
+                    (hex->rgb-list x)
+                    (color-name->rgb-list
+                     (string-replace (string-downcase x) "-" "")))]
+    [(symbol? x)(color-name->rgb-list x)]
+    [else x]))
+
+(define (hex->rgb-list x)
+  (define l (string->list (string-trim x "#")))
+  (define r (string (first l) (second l)))
+  (define g (string (third l) (fourth l)))
+  (define b (string (fifth l) (sixth l)))
+  (list (string->number (~a "#x" r))
+        (string->number (~a "#x" g))
+        (string->number (~a "#x" b))))
+
+(define (color-name->rgb-list c)
+  (define new-c (name->color c))
+  (define r (h:color-red new-c))
+  (define g (h:color-green new-c))
+  (define b (h:color-blue new-c))
+  (list r g b))
+
+(define (any-color-stx->color-obj color)
+  (define c (any-color-stx->rgb-list color))
+  (if (object? c)
+      c
+      (make-color (first c) (second c) (third c))))
+
+(define (any-color-stx->rgba-string color)
+  (define c (any-color-stx->rgb-list color))
+  (if (object? c)
+      (render c)
+      (if (false? c)
+          c
+          (~a "rgba(" (first c) "," (second c) "," (third c) ",255)"))))
+
+(define (object->pair obj)
+  (cons (string-trim
+   (string-trim
+    (~a (object-name obj)) "object:") "%") (render obj)))
+
+(define (list-objects->hash l)
+  (define pair-list (map object->pair l))
+  (make-hash pair-list))
 
   ;-------------------------- ENVIRONMENTS
   (define (basic-environment #:preset                [preset 'default]
@@ -134,15 +183,15 @@
                       "preset"         (~a preset)
                       "dressing"       (~a dressing)
                       "dressingAmount" amount
-                      "dressingColor"  color
+                      "dressingColor"  (any-color-stx->rgba-string color)
                       "dressingScale"  scale
                       "dressingVariance" (and variance (send variance render))
                       "fog"            fog
                       "ground"         (~a ground)
-                      "groundColor"    color-1
-                      "groundColor-2"   color-2
+                      "groundColor"    (any-color-stx->rgba-string color-1)
+                      "groundColor2"   (any-color-stx->rgba-string color-2) 
                       "groundTexture"  (~a texture)
-                      "horizonColor"   horizon))
+                      "horizonColor"   (any-color-stx->rgba-string horizon)))
     (define env (environment (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
                                                               (equal? (cdr p) "#f")))
                                                     (hash->list env-hash)))))
@@ -205,7 +254,7 @@
                         #:opacity [opac 0.8]
                         #:visible [vis "true"]
                         #:components-list [c '()])
-    (entity "cursor" (append (list col
+    (entity "cursor" (append (list (any-color-stx->color-obj col)
                                    (opacity opac)
                                    (visible vis))
                              c)))
@@ -222,7 +271,7 @@
   (define (basic-sky #:color [col (color 255 255 255)]
                      #:opacity [opac 0.9]
                      #:components-list [c '()])
-    (entity "sky" (append (list col
+    (entity "sky" (append (list (any-color-stx->color-obj col)
                                 (opacity opac))
                           c)))
   
@@ -237,7 +286,7 @@
                       #:opacity [opac 1.0]
                       #:texture [tex ""]
                       #:components-list [c '()])
-    (entity "box" (append (list posn rota sca col
+    (entity "box" (append (list posn rota sca (any-color-stx->color-obj col)
                                 (depth dep)
                                 (height hei)
                                 (width wid)
@@ -255,7 +304,7 @@
                       #:opacity [opac 1.0]
                       #:texture [tex ""]
                       #:components-list [c '()])
-    (entity "cone" (append (list posn rota sca col
+    (entity "cone" (append (list posn rota sca (any-color-stx->color-obj col)
                                  (radius-bottom radb)
                                  (radius-top radt)
                                  (height hei)
@@ -272,7 +321,7 @@
                           #:opacity [opac 1.0]
                           #:texture [tex ""]
                           #:components-list [c '()])
-    (entity "cylinder" (append (list posn rota sca col
+    (entity "cylinder" (append (list posn rota sca (any-color-stx->color-obj col)
                                      (radius r)
                                      (height hei)
                                      (opacity opac)
@@ -287,7 +336,7 @@
                               #:opacity [opac 1.0]
                               #:texture [tex ""]
                               #:components-list [c '()])
-    (entity "dodecahedron" (append (list posn rota sca col
+    (entity "dodecahedron" (append (list posn rota sca (any-color-stx->color-obj col)
                                          (radius r)
                                          (opacity opac)
                                          (src tex))
@@ -301,7 +350,7 @@
                              #:opacity [opac 1.0]
                              #:texture [tex ""]
                              #:components-list [c '()])
-    (entity "icosahedron" (append (list posn rota sca col
+    (entity "icosahedron" (append (list posn rota sca (any-color-stx->color-obj col)
                                         (radius r)
                                         (opacity opac)
                                         (src tex))
@@ -315,7 +364,7 @@
                             #:opacity [opac 1.0]
                             #:texture [tex ""]
                             #:components-list [c '()])
-    (entity "octahedron" (append (list posn rota sca col
+    (entity "octahedron" (append (list posn rota sca (any-color-stx->color-obj col)
                                        (radius r)
                                        (opacity opac)
                                        (src tex))
@@ -327,10 +376,18 @@
                         #:radius [r 1.0]
                         #:color [col (color 128 128 128)]
                         #:opacity [opac 1.0]
+                        #:on-mouse-enter [mouse-enter #f]
+                        #:on-mouse-leave [mouse-leave #f]
+                        #:on-mouse-click [mouse-click #f]
                         #:components-list [c '()])
-    (entity "sphere" (append (list posn rota sca col
+    (entity "sphere" (append (list posn rota sca
+                                   (any-color-stx->color-obj col)
                                    (radius r)
-                                   (opacity opac))
+                                   (opacity opac)
+                                   (mouseenter (list-objects->hash mouse-enter))
+                                   (mouseleave (list-objects->hash mouse-leave))
+                                   (on-click (list-objects->hash mouse-click))
+                                   )
                              c)))
 
 
@@ -342,7 +399,7 @@
                              #:opacity [opac 1.0]
                              #:texture [tex ""]
                              #:components-list [c '()])
-    (entity "tetrahedron" (append (list posn rota sca col
+    (entity "tetrahedron" (append (list posn rota sca (any-color-stx->color-obj col)
                                         (radius r)
                                         (opacity opac)
                                         (src tex))
@@ -363,7 +420,7 @@
                         #:opacity [opac 1.0]
                         #:texture [tex ""]
                         #:components-list [c '()])
-    (entity "circle" (append (list posn rota sca col
+    (entity "circle" (append (list posn rota sca (any-color-stx->color-obj col)
                                         (radius r)
                                         (opacity opac)
                                         (src tex))
@@ -378,7 +435,7 @@
                        #:height [hei 1.0]
                        #:width [wid 1.0]
                        #:components-list [c '()])
-    (entity "plane" (append (list posn rota sca col
+    (entity "plane" (append (list posn rota sca (any-color-stx->color-obj col)
                                   (height hei)
                                   (width wid)
                                   (opacity opac)
@@ -394,7 +451,7 @@
                       #:opacity [opac 1.0]
                       #:texture [tex ""]
                       #:components-list [c '()])
-    (entity "ring" (append (list posn rota sca col
+    (entity "ring" (append (list posn rota sca (any-color-stx->color-obj col)
                                  (radius-inner radi)
                                  (radius-outer rado)
                                  (opacity opac)
@@ -411,7 +468,7 @@
                           #:opacity [opac 1.0]
                           #:texture [tex ""]
                           #:components-list [co '()])
-    (entity "triangle" (append (list posn rota sca col
+    (entity "triangle" (append (list posn rota sca (any-color-stx->color-obj col)
                                  ;(vertex-a a)
                                  ;(vertex-b b)
                                  ;(vertex-c c)
@@ -423,10 +480,10 @@
   (define (add-stars #:position [posn (position 0.0 0.0 0.0)]
                      #:rotation [rota (rotation 0.0 0.0 0.0)]
                      #:scale [scale (scale 1.0 1.0 1.0)]
-                     #:color [col "#ffffff"]
+                     #:hex-color [col "#ffffff"]
                      #:count [count 10000]
-                     #:depth [dep 300]
-                     #:radius [rad 300]
+                     #:depth [dep 180]
+                     #:radius [rad 180]
                      #:star-size [size 1.0]
                      #:texture [texture ""])
     (basic-entity
@@ -452,7 +509,7 @@
     (basic-entity
      #:components-list (list (ocean (hash "amplitude" amp
                                           "amplitudeVariance" amp-var
-                                          "color" col
+                                          "color" (any-color-stx->rgba-string col)
                                           "density" den
                                           "depth" dep
                                           "opacity" opa
@@ -468,7 +525,7 @@
                          #:texture  [texture #f]
                          #:size     [size    #f]
                          #:speed    [speed #f]
-                         #:color    [col #f]
+                         #:hex-color    [col #f]
                          )
     (define p-hash (hash
                     "preset"  (~a preset)

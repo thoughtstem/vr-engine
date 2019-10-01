@@ -1,7 +1,9 @@
 #lang racket
 
 (require "./attribute-definer.rkt")
-(require "./component-definer.rkt")
+(require "./component-definer.rkt"
+         image-colors
+         (prefix-in h: 2htdp/image))
 
 
 (provide (rename-out [make-scene  scene])
@@ -98,8 +100,34 @@
 
 (define-attribute color    (r g b a) "rgba(~a, ~a, ~a, ~a)")
 
-(define (make-color r g b (a 255))
-  (color r g b a))
+(define (make-color r (g 0) (b 0) (a 255))
+  (cond
+    [(symbol? r)(color-name->color a)]
+    [(string? r)(if (char=? #\# (string-ref r 0))
+                    (hex->color r)
+                    (color-name->color
+                     (string-replace (string-downcase r) "-" "")))]
+    [(number? r) (color r g b a)]
+    [else #f]))
+
+; ------------
+(define (color-name->color c)
+  (define new-c (name->color c))
+  (define r (h:color-red new-c))
+  (define g (h:color-green new-c))
+  (define b (h:color-blue new-c))
+  (color r g b 255))
+
+(define (hex->color x)
+  (define l (string->list (string-trim x "#")))
+  (define r (string (first l) (second l)))
+  (define g (string (third l) (fourth l)))
+  (define b (string (fifth l) (sixth l)))
+  (color(string->number (~a "#x" r))
+        (string->number (~a "#x" g))
+        (string->number (~a "#x" b))
+        255))
+;----------------
 
 (define-attribute attribute (s) "~a")
 (define-attribute to        (x y z) "~a ~a ~a")
