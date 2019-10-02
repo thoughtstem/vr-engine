@@ -285,13 +285,20 @@
                       #:color [col (color 128 128 128)]
                       #:opacity [opac 1.0]
                       #:texture [tex ""]
+                      #:on-mouse-enter [mouse-enter #f]
+                      #:on-mouse-leave [mouse-leave #f]
+                      #:on-mouse-click [mouse-click #f]
                       #:components-list [c '()])
-    (entity "box" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "box" (append (list posn rota sca
+                                (any-color-stx->color-obj col)
                                 (depth dep)
                                 (height hei)
                                 (width wid)
                                 (opacity opac)
-                                (src tex))
+                                (src tex)
+                                (mouseenter (list-objects->hash mouse-enter))
+                                (mouseleave (list-objects->hash mouse-leave))
+                                (on-click (list-objects->hash mouse-click)))
                           c)))
 
   (define (basic-cone #:position [posn (position 0.0 0.0 0.0)]
@@ -303,13 +310,20 @@
                       #:color [col (color 128 128 128)]
                       #:opacity [opac 1.0]
                       #:texture [tex ""]
+                      #:on-mouse-enter [mouse-enter #f]
+                      #:on-mouse-leave [mouse-leave #f]
+                      #:on-mouse-click [mouse-click #f]
                       #:components-list [c '()])
-    (entity "cone" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "cone" (append (list posn rota sca
+                                 (any-color-stx->color-obj col)
                                  (radius-bottom radb)
                                  (radius-top radt)
                                  (height hei)
                                  (opacity opac)
-                                 (src tex))
+                                 (src tex)
+                                 (mouseenter (list-objects->hash mouse-enter))
+                                 (mouseleave (list-objects->hash mouse-leave))
+                                 (on-click (list-objects->hash mouse-click)))
                            c)))
   
   (define (basic-cylinder #:position [posn (position 0.0 0.0 0.0)]
@@ -320,12 +334,19 @@
                           #:color [col (color 128 128 128)]
                           #:opacity [opac 1.0]
                           #:texture [tex ""]
+                          #:on-mouse-enter [mouse-enter #f]
+                          #:on-mouse-leave [mouse-leave #f]
+                          #:on-mouse-click [mouse-click #f]
                           #:components-list [c '()])
-    (entity "cylinder" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "cylinder" (append (list posn rota sca
+                                     (any-color-stx->color-obj col)
                                      (radius r)
                                      (height hei)
                                      (opacity opac)
-                                     (src tex))
+                                     (src tex)
+                                     (mouseenter (list-objects->hash mouse-enter))
+                                     (mouseleave (list-objects->hash mouse-leave))
+                                     (on-click (list-objects->hash mouse-click)))
                                c)))
 
   (define (basic-dodecahedron #:position [posn (position 0.0 0.0 0.0)]
@@ -335,11 +356,18 @@
                               #:color [col (color 128 128 128)]
                               #:opacity [opac 1.0]
                               #:texture [tex ""]
+                              #:on-mouse-enter [mouse-enter #f]
+                              #:on-mouse-leave [mouse-leave #f]
+                              #:on-mouse-click [mouse-click #f]
                               #:components-list [c '()])
-    (entity "dodecahedron" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "dodecahedron" (append (list posn rota sca
+                                         (any-color-stx->color-obj col)
                                          (radius r)
                                          (opacity opac)
-                                         (src tex))
+                                         (src tex)
+                                         (mouseenter (list-objects->hash mouse-enter))
+                                         (mouseleave (list-objects->hash mouse-leave))
+                                         (on-click (list-objects->hash mouse-click)))
                                    c)))
 
   (define (basic-icosahedron #:position [posn (position 0.0 0.0 0.0)]
@@ -349,11 +377,18 @@
                              #:color [col (color 128 128 128)]
                              #:opacity [opac 1.0]
                              #:texture [tex ""]
+                             #:on-mouse-enter [mouse-enter #f]
+                             #:on-mouse-leave [mouse-leave #f]
+                             #:on-mouse-click [mouse-click #f]
                              #:components-list [c '()])
-    (entity "icosahedron" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "icosahedron" (append (list posn rota sca
+                                        (any-color-stx->color-obj col)
                                         (radius r)
                                         (opacity opac)
-                                        (src tex))
+                                        (src tex)
+                                        (mouseenter (list-objects->hash mouse-enter))
+                                        (mouseleave (list-objects->hash mouse-leave))
+                                        (on-click (list-objects->hash mouse-click)))
                                   c)))
   
   (define (basic-octahedron #:position [posn (position 0.0 0.0 0.0)]
@@ -363,11 +398,18 @@
                             #:color [col (color 128 128 128)]
                             #:opacity [opac 1.0]
                             #:texture [tex ""]
+                            #:on-mouse-enter [mouse-enter #f]
+                            #:on-mouse-leave [mouse-leave #f]
+                            #:on-mouse-click [mouse-click #f]
                             #:components-list [c '()])
-    (entity "octahedron" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "octahedron" (append (list posn rota sca
+                                       (any-color-stx->color-obj col)
                                        (radius r)
                                        (opacity opac)
-                                       (src tex))
+                                       (src tex)
+                                       (mouseenter (list-objects->hash mouse-enter))
+                                       (mouseleave (list-objects->hash mouse-leave))
+                                       (on-click (list-objects->hash mouse-click)))
                                  c)))
   
   (define (basic-sphere #:position [posn (position 0.0 0.0 0.0)]
@@ -398,11 +440,18 @@
                              #:color [col (color 128 128 128)]
                              #:opacity [opac 1.0]
                              #:texture [tex ""]
+                             #:on-mouse-enter [mouse-enter #f]
+                             #:on-mouse-leave [mouse-leave #f]
+                             #:on-mouse-click [mouse-click #f]
                              #:components-list [c '()])
-    (entity "tetrahedron" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "tetrahedron" (append (list posn rota sca
+                                        (any-color-stx->color-obj col)
                                         (radius r)
                                         (opacity opac)
-                                        (src tex))
+                                        (src tex)
+                                        (mouseenter (list-objects->hash mouse-enter))
+                                        (mouseleave (list-objects->hash mouse-leave))
+                                        (on-click (list-objects->hash mouse-click)))
                                   c)))
 
   (define (torus #:components-list [c '()])
@@ -419,12 +468,19 @@
                         #:color [col (color 128 128 128)]
                         #:opacity [opac 1.0]
                         #:texture [tex ""]
+                        #:on-mouse-enter [mouse-enter #f]
+                        #:on-mouse-leave [mouse-leave #f]
+                        #:on-mouse-click [mouse-click #f]
                         #:components-list [c '()])
-    (entity "circle" (append (list posn rota sca (any-color-stx->color-obj col)
-                                        (radius r)
-                                        (opacity opac)
-                                        (src tex))
-                                  c)))
+    (entity "circle" (append (list posn rota sca
+                                   (any-color-stx->color-obj col)
+                                   (radius r)
+                                   (opacity opac)
+                                   (src tex)
+                                   (mouseenter (list-objects->hash mouse-enter))
+                                   (mouseleave (list-objects->hash mouse-leave))
+                                   (on-click (list-objects->hash mouse-click)))
+                             c)))
 
   (define (basic-plane #:position [posn (position 0.0 0.0 0.0)]
                        #:rotation [rota (rotation 0.0 0.0 0.0)]
@@ -432,14 +488,21 @@
                        #:color [col (color 128 128 128)]
                        #:opacity [opac 1.0]
                        #:texture [tex ""]
+                       #:on-mouse-enter [mouse-enter #f]
+                       #:on-mouse-leave [mouse-leave #f]
+                       #:on-mouse-click [mouse-click #f]
                        #:height [hei 1.0]
                        #:width [wid 1.0]
                        #:components-list [c '()])
-    (entity "plane" (append (list posn rota sca (any-color-stx->color-obj col)
+    (entity "plane" (append (list posn rota sca
+                                  (any-color-stx->color-obj col)
                                   (height hei)
                                   (width wid)
                                   (opacity opac)
-                                  (src tex))
+                                  (src tex)
+                                  (mouseenter (list-objects->hash mouse-enter))
+                                  (mouseleave (list-objects->hash mouse-leave))
+                                  (on-click (list-objects->hash mouse-click)))
                             c)))
 
   (define (basic-ring #:position [posn (position 0.0 0.0 0.0)]
@@ -450,12 +513,18 @@
                       #:radius-outer [rado 1.2]
                       #:opacity [opac 1.0]
                       #:texture [tex ""]
+                      #:on-mouse-enter [mouse-enter #f]
+                      #:on-mouse-leave [mouse-leave #f]
+                      #:on-mouse-click [mouse-click #f]
                       #:components-list [c '()])
     (entity "ring" (append (list posn rota sca (any-color-stx->color-obj col)
                                  (radius-inner radi)
                                  (radius-outer rado)
                                  (opacity opac)
-                                 (src tex))
+                                 (src tex)
+                                 (mouseenter (list-objects->hash mouse-enter))
+                                 (mouseleave (list-objects->hash mouse-leave))
+                                 (on-click (list-objects->hash mouse-click)))
                            c)))
 
   (define (basic-triangle #:position [posn (position 0.0 0.0 0.0)]
@@ -467,14 +536,20 @@
                           ;#:vertex-c [c (vertex  0.5 -0.5 0.0)]
                           #:opacity [opac 1.0]
                           #:texture [tex ""]
+                          #:on-mouse-enter [mouse-enter #f]
+                          #:on-mouse-leave [mouse-leave #f]
+                          #:on-mouse-click [mouse-click #f]
                           #:components-list [co '()])
     (entity "triangle" (append (list posn rota sca (any-color-stx->color-obj col)
                                  ;(vertex-a a)
                                  ;(vertex-b b)
                                  ;(vertex-c c)
                                  (opacity opac)
-                                 (src tex))
-                           co)))
+                                 (src tex)
+                                 (mouseenter (list-objects->hash mouse-enter))
+                                 (mouseleave (list-objects->hash mouse-leave))
+                                 (on-click (list-objects->hash mouse-click)))
+                               co)))
 
   ;-------------------------- CUSTOM OBJECTS
   (define (add-stars #:position [posn (position 0.0 0.0 0.0)]
