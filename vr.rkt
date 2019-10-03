@@ -62,6 +62,7 @@
 
 (define-attribute maxAge (n) "~a")
 (define-attribute positionSpread (x y z) "~a ~a ~a")
+
 (define-attribute rotationAxis (s) "~a")
 (define-attribute rotationAngle (n) "~a")
 (define-attribute accelerationValue (n) "~a")

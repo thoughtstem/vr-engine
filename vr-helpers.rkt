@@ -28,6 +28,7 @@
 
    add-stars
    add-ocean
+   ;add-sun
    add-particles
    
    animation
@@ -39,6 +40,8 @@
 
    (rename-out [make-color color]
                [safe-position position])
+
+   posn-spread
    )
 
  (require racket/runtime-path
@@ -97,8 +100,9 @@
     (define s ;(append (list env sky cams) ents remotes
                       (filter identity (flatten (cons ent custom-entities))))
                ;)
-    
-    (send-to-browser (scene s)))
+
+    (send-to-browser (scene s))
+    )
 
  ;-------------------------- SOME FUNCTIONS
 (define preset?
@@ -161,8 +165,13 @@
     (~a (object-name obj)) "object:") "%") (render obj)))
 
 (define (list-objects->hash l)
-  (define pair-list (map object->pair l))
-  (make-hash pair-list))
+  (if (false? l)
+      ""
+      (make-hash (map object->pair l))))
+
+
+(define (posn-spread x y z)
+  (~a x " " y " " z))
 
   ;-------------------------- ENVIRONMENTS
   (define (basic-environment #:preset                [preset 'default]
@@ -172,12 +181,13 @@
                              #:dressing-scale        [scale #f]
                              #:dressing-variance     [variance #f]
                              #:dressing-on-play-area [play-area #f]
-                             #:fog                   [fog #f]
+                             #:fog                   [fog 0]
                              #:ground                [ground #f]
                              #:ground-color-1        [color-1 #f]
                              #:ground-color-2        [color-2 #f]
                              #:ground-texture        [texture #f]
                              #:horizon-color         [horizon #f]
+                             #:sky-color         [sky #f]
                              #:other-components-list [comps '()])
     (define env-hash (hash
                       "preset"         (~a preset)
@@ -191,7 +201,8 @@
                       "groundColor"    (any-color-stx->rgba-string color-1)
                       "groundColor2"   (any-color-stx->rgba-string color-2) 
                       "groundTexture"  (~a texture)
-                      "horizonColor"   (any-color-stx->rgba-string horizon)))
+                      "horizonColor"   (any-color-stx->rgba-string horizon)
+                      "skyColor"   (any-color-stx->rgba-string sky)))
     (define env (environment (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
                                                               (equal? (cdr p) "#f")))
                                                     (hash->list env-hash)))))
@@ -209,6 +220,7 @@
                         #:ground-color-2  [color-2 "#987d2e"]
                         #:ground-texture  [texture 'squares]
                         #:horizon-color   [horizon "#eff9b7"]
+                        #:sky-color   [sky "#eff9b7"]
                         #:other-components-list [comps '()])
 
     (basic-environment #:preset          preset
@@ -222,6 +234,7 @@
                        #:ground-color-2  color-2
                        #:ground-texture  texture
                        #:horizon-color   horizon
+                       #:sky-color       sky
                        #:other-components-list comps))
   
   (define (basic-volcano #:preset          [preset 'volcano]
@@ -234,7 +247,8 @@
                          #:ground-color-1  [color-1 "#fb0803"]
                          #:ground-color-2  [color-2 "#510000"]
                          #:ground-texture  [texture 'walkernoise]
-                         #:horizon-color   [horizon "#f62300"])
+                         #:horizon-color   [horizon "#f62300"]
+                         #:sky-color       [sky "#4a070f"])
 
     (basic-environment #:preset          preset
                        #:dressing        dressing
@@ -246,7 +260,8 @@
                        #:ground-color-1  color-1
                        #:ground-color-2  color-2
                        #:ground-texture  texture
-                       #:horizon-color   horizon)
+                       #:horizon-color   horizon
+                       #:sky-color       sky)
     )
 
   ;-------------------------- SKY - CAMERA - CURSOR
@@ -593,14 +608,24 @@
                                           "width" wid))
                              posn rota scale)))
 
-  (define (add-particles #:position [posn (position 0.0 0.0 0.0)]
-                         #:rotation [rota (rotation 0.0 0.0 0.0)]
-                         #:scale    [scale (scale 1.0 1.0 1.0)]
-                         #:preset   [preset 'default]
-                         #:texture  [texture #f]
-                         #:size     [size    #f]
-                         #:speed    [speed #f]
-                         #:hex-color    [col #f]
+#|(define (add-sun #:position [posn (position 0.0 0.0 0.0)]
+                 #:rotation [rota (rotation -90.0 0.0 0.0)]
+                 #:scale [scale (scale 1.0 1.0 1.0)])
+    (basic-entity
+     #:components-list (list (sun)
+                             posn rota scale)))|#
+
+  (define (add-particles #:position    [posn (position 0.0 0.0 0.0)]
+                         #:rotation    [rota (rotation 0.0 0.0 0.0)]
+                         #:scale       [scale (scale 1.0 1.0 1.0)]
+                         #:preset      [preset 'default]
+                         #:texture     [texture #f]
+                         #:size        [size    #f]
+                         #:speed       [speed #f]
+                         #:age         [age #f]
+                         #:hex-color   [col #f]
+                         #:count       [count #f]
+                         #:posn-spread [spr (posn-spread 100.0 100.0 100.0)]
                          )
     (define p-hash (hash
                     "preset"  (~a preset)
@@ -609,7 +634,10 @@
                     "velocityValue"       (and speed "0 5 0")
                     "accelerationValue"   (and speed (~a 0 (- speed) 0 #:separator " "))
                     "accelerationSpread"  (and speed (~a speed 0 speed #:separator " "))
-                    "color"   col))
+                    "maxAge" age
+                    "color"   col
+                    "positionSpread" spr
+                    "particleCount" count))
     (define p-system (particle-system (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
                                                                        (equal? (cdr p) "#f")))
                                                              (hash->list p-hash)))))
