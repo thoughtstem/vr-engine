@@ -6,7 +6,7 @@
                "simple-qr"
                "urlang"
                "https://github.com/thoughtstem/define-assets-from.git"
-               "https://github.com/thoughtstem/image-colors.git"
+               "https://github.com/thoughtstem/image-coloring.git"
                ))
 
 (define scribblings '(("scribblings/manual.scrbl" (multi-page))))
