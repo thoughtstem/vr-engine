@@ -53,7 +53,7 @@
            "./attribute-definer.rkt"
            "./vr.rkt"
            ;"./assets.rkt"
-           image-colors
+           image-coloring
            )
 
 

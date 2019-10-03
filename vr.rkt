@@ -2,7 +2,7 @@
 
 (require "./attribute-definer.rkt")
 (require "./component-definer.rkt"
-         image-colors
+         image-coloring
          (prefix-in h: 2htdp/image))
 
 
