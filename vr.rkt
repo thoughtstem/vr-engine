@@ -15,6 +15,7 @@
          make-color
          wasd-controls
          safe-position
+         make-animation
          )
 
 (define-namespace-anchor a)
@@ -153,6 +154,15 @@
 (define-attribute vertex-a (x y z) "~a ~a ~a")
 (define-attribute vertex-b (x y z) "~a ~a ~a")
 (define-attribute vertex-c (x y z) "~a ~a ~a")
+(define-attribute animation (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
+
+(define (make-animation
+         #:property [p ""]
+         #:from     [f ""]
+         #:to       [t ""]
+         #:loops    [l 1]
+         #:duration [d 1000])
+  (animation p f t l d))
 ;-----------
 
 

@@ -3,14 +3,14 @@
 
 (provide
  (all-from-out ;"./assets.rkt"
-               "./attribute-definer.rkt"
-               "./component-definer.rkt"
-               "./my-ip-qr.rkt"              
-               "./vr-helpers.rkt"
-               )
-  (except-out (all-from-out "./vr.rkt")
-                          color
-                           position)
+  "./attribute-definer.rkt"
+  "./component-definer.rkt"
+  "./my-ip-qr.rkt"              
+  "./vr-helpers.rkt"
+  )
+ (except-out (all-from-out "./vr.rkt")
+             color
+             position)
  ;(all-from-out 2htdp/image) 
  )
 
