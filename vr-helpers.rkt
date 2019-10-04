@@ -35,7 +35,7 @@
  light
  assets
  assets-item
- obj-model
+ 3d-model
  gltf-model
 
  (rename-out [make-color color]
@@ -46,7 +46,7 @@
  animate-rotation
  animate-position
  animate-scale
- to-posn
+ posn
  from-posn
  )
 
@@ -182,7 +182,7 @@
 (define (animate-rotation
          #:property [p "rotation"]
          #:from     [f ""]
-         #:to       [t (to-posn 0 360 0)]
+         #:to       [t (posn 0 360 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
   (animation p f t l d)) 
@@ -190,7 +190,7 @@
 (define (animate-position
          #:property [p "position"]
          #:from     [f ""]
-         #:to       [t (to-posn 0 20 0)]
+         #:to       [t (posn 0 20 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
   (animation p f t l d)) 
@@ -203,7 +203,7 @@
          #:duration [d 5000])
   (animation p f (~a t " " t " " t) l d))
 
-(define (to-posn x y z)
+(define (posn x y z)
   (~a x " " y " " z))
 
 (define (from-posn x y z)
@@ -233,10 +233,18 @@
                     "dressingScale"  scale
                     "dressingVariance" (and variance (send variance render))
                     "fog"            fog
-                    "ground"         (~a ground)
-                    "groundColor"    (any-color-stx->rgba-string color-1)
-                    "groundColor2"   (any-color-stx->rgba-string color-2) 
-                    "groundTexture"  (~a texture)
+                    "ground"         (if (eq? preset 'default)
+                                             "hills"
+                                             (~a ground))
+                    "groundColor"    (if (eq? preset 'default)
+                                         "#004000"
+                                         (any-color-stx->rgba-string color-1))
+                    "groundColor2"   (if (eq? preset 'default)
+                                         "#005300"
+                                         (any-color-stx->rgba-string color-2))
+                    "groundTexture"  (if (eq? preset 'default)
+                                         "walkernoise"
+                                         (~a texture))
                     "horizonColor"   (any-color-stx->rgba-string horizon)
                     "skyColor"   (any-color-stx->rgba-string sky)))
   (define env (environment (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
@@ -341,7 +349,9 @@
                     #:on-mouse-click [mouse-click #f]
                     #:animations-list [a-list '()]
                     #:components-list [c '()])
-  (entity "box" (append (list posn rota sca
+  (entity "box" (append (list posn rota (if (number? sca)
+                                            (scale sca sca sca)
+                                            sca)
                               (any-color-stx->color-obj col)
                               (depth dep)
                               (height hei)
@@ -619,6 +629,16 @@
                              (append a-list c))))
 
 ;-------------------------- CUSTOM OBJECTS
+(define (3d-model #:position        [posn (position 0.0 0.0 0.0)]
+                  #:rotation        [rota (rotation 0.0 0.0 0.0)]
+                  #:scale           [scale (scale 1.0 1.0 1.0)]
+                  #:model           [model ""]
+                  #:animations-list  [a-list '()]
+                  #:components-list [c '()])
+  (entity "entity" (append (list posn rota scale model)
+                           (append a-list
+                                   c))))
+
 (define (basic-stars #:position [posn (position 0.0 0.0 0.0)]
                      #:rotation [rota (rotation 0.0 0.0 0.0)]
                      #:scale [scale (scale 1.0 1.0 1.0)]
@@ -671,7 +691,7 @@
                          #:rotation    [rota (rotation 0.0 0.0 0.0)]
                          #:scale       [scale (scale 1.0 1.0 1.0)]
                          #:preset      [preset 'default]
-                         #:texture     [texture #f]
+                         #:image       [texture #f]
                          #:size        [size    #f]
                          #:speed       [speed #f]
                          #:age         [age #f]
@@ -710,9 +730,7 @@
   
 (define (assets-item #:components-list [c '()])
   (entity "assets-item" c))
-  
-(define (obj-model #:components-list [c '()])
-  (entity "obj-model" c))
+ 
 
 (define (basic-entity #:components-list [c '()])
   (entity "entity" c))
