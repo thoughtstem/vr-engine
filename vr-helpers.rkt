@@ -59,7 +59,7 @@
          "./attribute-definer.rkt"
          "./vr.rkt"
          ;"./assets.rkt"
-         image-colors
+         image-coloring
          )
 
 
@@ -72,6 +72,7 @@
      #'(send-html-to-browser (scene->html s))]))
 
 (define-runtime-path pkg-js-path "js")
+
   
 (define (send-html-to-browser s)
   (displayln (~a (current-directory)))

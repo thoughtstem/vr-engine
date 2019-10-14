@@ -5,7 +5,8 @@
 (define deps '("hostname"
                "simple-qr"
                "urlang"
-               "define-assets-from"
+               "https://github.com/thoughtstem/define-assets-from.git"
+               "https://github.com/thoughtstem/image-coloring.git"
                ))
 
 (define scribblings '(("scribblings/manual.scrbl" (multi-page))))
