@@ -47,8 +47,6 @@
  animate-rotation
  animate-position
  animate-scale
- posn
- from-posn
  )
 
 (require racket/runtime-path
@@ -223,18 +221,18 @@
 (define (animate-rotation
          #:property [p "rotation"]
          #:from     [f ""]
-         #:to       [t (posn 0 360 0)]
+         #:to       [t (position 0 360 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
-  (animation p f t l d)) 
+  (animation p f (render t) l d)) 
 
 (define (animate-position
          #:property [p "position"]
          #:from     [f ""]
-         #:to       [t (posn 0 20 0)]
+         #:to       [t (position 0 20 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
-  (animation p f t l d)) 
+  (animation p f (render t) l d)) 
 
 (define (animate-scale
          #:property [p "scale"]
@@ -244,11 +242,6 @@
          #:duration [d 5000])
   (animation p f (~a t " " t " " t) l d))
 
-(define (posn x y z)
-  (~a x " " y " " z))
-
-(define (from-posn x y z)
-  (~a x " " y " " z))
 
 ;-------------------------- ENVIRONMENTS
 (define (basic-environment #:preset                [preset 'default]
