@@ -5,8 +5,8 @@
  ;--------------
  vr-scene
  basic-environment
- basic-forest
- basic-volcano
+ ;basic-forest
+; basic-volcano
  basic-entity
  basic-sky
  basic-camera
@@ -35,18 +35,19 @@
  light
  assets
  assets-item
- obj-model
+ 3d-model
  gltf-model
 
  (rename-out [make-color color]
              [make-animation animate]
-             [safe-position position])
+             [safe-position position]
+             [list do-many])
 
  posn-spread
  animate-rotation
  animate-position
  animate-scale
- to-posn
+ posn
  from-posn
  )
 
@@ -129,12 +130,20 @@
 
 (define (any-color-stx->rgb-list x)
   (cond
-    [(string? x)(if (char=? #\# (string-ref x 0))
-                    (hex->rgb-list x)
-                    (color-name->rgb-list
-                     (string-replace (string-downcase x) "-" "")))]
+    [(object? x) (color-object->rgb-list x)]
+    [(string? x) (if (char=? #\# (string-ref x 0))
+                     (hex->rgb-list x)
+                     (color-name->rgb-list
+                      (string-replace (string-downcase x) "-" "")))]
     [(symbol? x)(color-name->rgb-list x)]
     [else x]))
+
+(define (color-object->rgb-list color)
+  (define c (render color))
+  (define l (string-split (string-trim (string-trim c "rgba(") ")") ","))
+  (list (string->number (string-trim (first l) " "))
+        (string->number (string-trim (second l) " "))
+        (string->number (string-trim (third l) " "))))
 
 (define (hex->rgb-list x)
   (define l (string->list (string-trim x "#")))
@@ -152,6 +161,17 @@
   (define b (h:color-blue new-c))
   (list r g b))
 
+(define (any-color-stx->hex color)
+  (define c (any-color-stx->rgb-list color))
+  (define r (decimal->hex (first c)))
+  (define g (decimal->hex (second c)))
+  (define b (decimal->hex (third c)))
+  (~a "#"
+      (if (eq? r "") "00" r)
+      (if (eq? g "") "00" g)
+      (if (eq? b "") "00" b)))
+  
+
 (define (any-color-stx->color-obj color)
   (define c (any-color-stx->rgb-list color))
   (if (object? c)
@@ -165,6 +185,27 @@
       (if (false? c)
           c
           (~a "rgba(" (first c) "," (second c) "," (third c) ",255)"))))
+
+(define (decimal->hex x (s ""))
+  (define q 0)
+  (define r 0)
+  (define final s)
+  (if (> x 0)
+      (begin (set! q (quotient x 16))
+             (set! r (remainder x 16))
+  
+             (set! r (cond
+                       [(= r 10) "a"]
+                       [(= r 11) "b"]
+                       [(= r 12) "c"]
+                       [(= r 13) "d"]
+                       [(= r 14) "e"]
+                       [(= r 15) "f"]
+                       [else r]))
+             (set! final (~a r final))
+             (decimal->hex q final))
+      final))
+  
 
 (define (object->pair obj)
   (cons (string-trim
@@ -183,7 +224,7 @@
 (define (animate-rotation
          #:property [p "rotation"]
          #:from     [f ""]
-         #:to       [t (to-posn 0 360 0)]
+         #:to       [t (posn 0 360 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
   (animation p f t l d)) 
@@ -191,7 +232,7 @@
 (define (animate-position
          #:property [p "position"]
          #:from     [f ""]
-         #:to       [t (to-posn 0 20 0)]
+         #:to       [t (posn 0 20 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
   (animation p f t l d)) 
@@ -204,7 +245,7 @@
          #:duration [d 5000])
   (animation p f (~a t " " t " " t) l d))
 
-(define (to-posn x y z)
+(define (posn x y z)
   (~a x " " y " " z))
 
 (define (from-posn x y z)
@@ -234,10 +275,18 @@
                     "dressingScale"  scale
                     "dressingVariance" (and variance (send variance render))
                     "fog"            fog
-                    "ground"         (~a ground)
-                    "groundColor"    (any-color-stx->rgba-string color-1)
-                    "groundColor2"   (any-color-stx->rgba-string color-2) 
-                    "groundTexture"  (~a texture)
+                    "ground"         (if (eq? preset 'default)
+                                             "hills"
+                                             (~a ground))
+                    "groundColor"    (if (eq? preset 'default)
+                                         "#004000"
+                                         (any-color-stx->rgba-string color-1))
+                    "groundColor2"   (if (eq? preset 'default)
+                                         "#005300"
+                                         (any-color-stx->rgba-string color-2))
+                    "groundTexture"  (if (eq? preset 'default)
+                                         "walkernoise"
+                                         (~a texture))
                     "horizonColor"   (any-color-stx->rgba-string horizon)
                     "skyColor"   (any-color-stx->rgba-string sky)))
   (define env (environment (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
@@ -246,6 +295,7 @@
   (basic-entity
    #:components-list (list env)))
 
+#|
 (define (basic-forest #:preset          [preset 'forest]
                       #:dressing        [dressing 'trees]
                       #:dressing-amount [amount 500]
@@ -300,7 +350,7 @@
                      #:horizon-color   horizon
                      #:sky-color       sky)
   )
-
+|#
 ;-------------------------- SKY - CAMERA - CURSOR
 (define (basic-cursor #:color   [col (make-color 0 0 0)]
                       #:opacity [opac 0.8]
@@ -342,7 +392,9 @@
                     #:on-mouse-click [mouse-click #f]
                     #:animations-list [a-list '()]
                     #:components-list [c '()])
-  (entity "box" (append (list posn rota sca
+  (entity "box" (append (list posn rota (if (number? sca)
+                                            (scale sca sca sca)
+                                            sca)
                               (any-color-stx->color-obj col)
                               (depth dep)
                               (height hei)
@@ -620,17 +672,27 @@
                              (append a-list c))))
 
 ;-------------------------- CUSTOM OBJECTS
+(define (3d-model #:position        [posn (position 0.0 0.0 0.0)]
+                  #:rotation        [rota (rotation 0.0 0.0 0.0)]
+                  #:scale           [scale (scale 1.0 1.0 1.0)]
+                  #:model           [model ""]
+                  #:animations-list  [a-list '()]
+                  #:components-list [c '()])
+  (entity "entity" (append (list posn rota scale model)
+                           (append a-list
+                                   c))))
+
 (define (basic-stars #:position [posn (position 0.0 0.0 0.0)]
                      #:rotation [rota (rotation 0.0 0.0 0.0)]
                      #:scale [scale (scale 1.0 1.0 1.0)]
-                     #:hex-color [col "#ffffff"]
+                     #:color [col "white"]
                      #:count [count 10000]
                      #:depth [dep 180]
                      #:radius [rad 180]
                      #:star-size [size 1.0]
                      #:texture [texture ""])
   (basic-entity
-   #:components-list (list (star-system (hash "color" col
+   #:components-list (list (star-system (hash "color" (any-color-stx->hex col)
                                               "depth" dep
                                               "radius" rad
                                               "starSize" size
@@ -672,11 +734,11 @@
                          #:rotation    [rota (rotation 0.0 0.0 0.0)]
                          #:scale       [scale (scale 1.0 1.0 1.0)]
                          #:preset      [preset 'default]
-                         #:texture     [texture #f]
+                         #:image       [texture #f]
                          #:size        [size    #f]
                          #:speed       [speed #f]
                          #:age         [age #f]
-                         #:hex-color   [col #f]
+                         #:color       [col #f]
                          #:count       [count #f]
                          #:posn-spread [spr (posn-spread 100.0 100.0 100.0)]
                          )
@@ -688,7 +750,7 @@
                   "accelerationValue"   (and speed (~a 0 (- speed) 0 #:separator " "))
                   "accelerationSpread"  (and speed (~a speed 0 speed #:separator " "))
                   "maxAge" age
-                  "color"   col
+                  "color"   (if (false? col) col (any-color-stx->hex col))
                   "positionSpread" spr
                   "particleCount" count))
   (define p-system (particle-system (make-hash (filter-not (λ(p) (or (equal? (cdr p) #f)
@@ -711,9 +773,7 @@
   
 (define (assets-item #:components-list [c '()])
   (entity "assets-item" c))
-  
-(define (obj-model #:components-list [c '()])
-  (entity "obj-model" c))
+ 
 
 (define (basic-entity #:components-list [c '()])
   (entity "entity" c))
