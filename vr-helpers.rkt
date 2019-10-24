@@ -39,7 +39,7 @@
  gltf-model
 
  (rename-out [make-color color]
-             [make-animation animate]
+             ;[make-animation animate]
              [safe-position position]
              [list do-many])
 
@@ -135,7 +135,7 @@
                      (hex->rgb-list x)
                      (color-name->rgb-list
                       (string-replace (string-downcase x) "-" "")))]
-    [(symbol? x)(color-name->rgb-list x)]
+    [(symbol? x)(color-name->rgb-list (string-replace (string-downcase (symbol->string x)) "-" ""))]
     [else x]))
 
 (define (color-object->rgb-list color)
@@ -227,7 +227,7 @@
          #:to       [t (position 0 360 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
-  (animation p f (render t) l d)) 
+  (animation__rotation p f (render t) l d)) 
 
 (define (animate-position
          #:property [p "position"]
@@ -235,7 +235,7 @@
          #:to       [t (position 0 20 0)]
          #:loops    [l "true"]
          #:duration [d 5000])
-  (animation p f (render t) l d)) 
+  (animation__position p f (render t) l d)) 
 
 (define (animate-scale
          #:property [p "scale"]
@@ -243,11 +243,12 @@
          #:to       [t  2]
          #:loops    [l "true"]
          #:duration [d 5000])
-  (animation p f (~a t " " t " " t) l d))
+  (animation__scale p f (~a t " " t " " t) l d))
 
 
 ;-------------------------- ENVIRONMENTS
-(define (basic-environment #:preset                [preset 'default]
+(define (basic-environment #:basic?                [basic? #t]
+                           #:preset                [preset 'default]
                            #:dressing              [dressing #f]
                            #:dressing-amount       [amount #f]
                            #:dressing-color        [color #f]
@@ -260,7 +261,7 @@
                            #:ground-color-2        [color-2 #f]
                            #:ground-texture        [texture #f]
                            #:horizon-color         [horizon #f]
-                           #:sky-color         [sky #f]
+                           #:sky-color             [sky #f]
                            #:other-components-list [comps '()])
   (define env-hash (hash
                     "preset"         (~a preset)
@@ -270,16 +271,16 @@
                     "dressingScale"  scale
                     "dressingVariance" (and variance (send variance render))
                     "fog"            fog
-                    "ground"         (if (eq? preset 'default)
+                    "ground"         (if (and (eq? preset 'default) basic? (false? ground))
                                              "hills"
                                              (~a ground))
-                    "groundColor"    (if (eq? preset 'default)
+                    "groundColor"    (if (and (eq? preset 'default) basic? (false? color-1))
                                          "#004000"
                                          (any-color-stx->rgba-string color-1))
-                    "groundColor2"   (if (eq? preset 'default)
+                    "groundColor2"   (if (and (eq? preset 'default) basic? (false? color-2))
                                          "#005300"
                                          (any-color-stx->rgba-string color-2))
-                    "groundTexture"  (if (eq? preset 'default)
+                    "groundTexture"  (if (and (eq? preset 'default) basic? (false? texture))
                                          "walkernoise"
                                          (~a texture))
                     "horizonColor"   (any-color-stx->rgba-string horizon)

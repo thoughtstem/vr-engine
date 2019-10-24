@@ -15,7 +15,7 @@
          make-color
          wasd-controls
          safe-position
-         make-animation
+         ;make-animation
          )
 
 (define-namespace-anchor a)
@@ -104,7 +104,7 @@
 
 (define (make-color r (g 0) (b 0) (a 255))
   (cond
-    [(symbol? r)(color-name->color a)]
+    [(symbol? r)(color-name->color r)]
     [(string? r)(if (char=? #\# (string-ref r 0))
                     (hex->color r)
                     (color-name->color
@@ -155,7 +155,11 @@
 (define-attribute vertex-b (x y z) "~a ~a ~a")
 (define-attribute vertex-c (x y z) "~a ~a ~a")
 (define-attribute animation (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
+(define-attribute animation__rotation (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
+(define-attribute animation__position (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
+(define-attribute animation__scale (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
 
+#|
 (define (make-animation
          #:property [p ""]
          #:from     [f ""]
@@ -163,6 +167,7 @@
          #:loops    [l 1]
          #:duration [d 1000])
   (animation p f t l d))
+|#
 ;-----------
 
 
