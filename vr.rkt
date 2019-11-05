@@ -154,10 +154,10 @@
 (define-attribute vertex-a (x y z) "~a ~a ~a")
 (define-attribute vertex-b (x y z) "~a ~a ~a")
 (define-attribute vertex-c (x y z) "~a ~a ~a")
-(define-attribute animation (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
-(define-attribute animation__rotation (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
-(define-attribute animation__position (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
-(define-attribute animation__scale (p f t l d) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a")
+(define-attribute animation (p f t l d dir) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a; dir: ~a")
+(define-attribute animation__rotation (p f t l d dir) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a; dir: ~a")
+(define-attribute animation__position (p f t l d dir) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a; dir: ~a")
+(define-attribute animation__scale (p f t l d dir) "property: ~a; from: ~a; to: ~a; loop: ~a; dur: ~a; dir: ~a")
 
 #|
 (define (make-animation

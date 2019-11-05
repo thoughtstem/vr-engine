@@ -226,24 +226,27 @@
          #:from     [f ""]
          #:to       [t (position 0 360 0)]
          #:loops    [l "true"]
-         #:duration [d 5000])
-  (animation__rotation p f (render t) l d)) 
+         #:duration [d 5000]
+         #:direction [dir "alternate"])
+  (animation__rotation p f (render t) l d dir)) 
 
 (define (animate-position
          #:property [p "position"]
          #:from     [f ""]
          #:to       [t (position 0 20 0)]
          #:loops    [l "true"]
-         #:duration [d 5000])
-  (animation__position p f (render t) l d)) 
+         #:duration [d 5000]
+         #:direction [dir "alternate"])
+  (animation__position p f (render t) l d dir)) 
 
 (define (animate-scale
          #:property [p "scale"]
          #:from     [f ""]
          #:to       [t  2]
          #:loops    [l "true"]
-         #:duration [d 5000])
-  (animation__scale p f (~a t " " t " " t) l d))
+         #:duration [d 5000]
+          #:direction [dir "alternate"])
+  (animation__scale p f (~a t " " t " " t) l d dir))
 
 
 ;-------------------------- ENVIRONMENTS
@@ -736,7 +739,7 @@
                          #:age         [age #f]
                          #:color       [col #f]
                          #:count       [count #f]
-                         #:posn-spread [spr (posn-spread 100.0 100.0 100.0)]
+                         #:posn-spread [spr #f]
                          )
   (define p-hash (hash
                   "preset"  (~a preset)
