@@ -23,7 +23,9 @@
         (begin
           (cond [(eq? (system-type 'os) 'windows) (maybe-create-tmp)])
           (best-ipv4-ip-address))
-        (first (get-ipv4-addrs))))
+        (if (empty? (get-ipv4-addrs))
+            "127.0.0.1"
+            (first (get-ipv4-addrs)))))
 
 (define (my-ip-qr-img (post-fix ""))
   (define my-ip-qr
