@@ -227,7 +227,8 @@
          #:to       [t (position 0 360 0)]
          #:loops    [l "true"]
          #:duration [d 5000]
-         #:direction [dir "alternate"])
+         #:direction [dir "normal"]
+         )
   (animation__rotation p f (render t) l d dir)) 
 
 (define (animate-position
