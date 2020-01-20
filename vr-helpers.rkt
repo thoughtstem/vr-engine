@@ -20,6 +20,7 @@
  basic-octahedron
  basic-sphere
  basic-tetrahedron
+ basic-torus
           
  basic-circle
  basic-plane
@@ -370,10 +371,12 @@
                                  cursor)
                            comps)))
 
-(define (basic-sky #:color [col (make-color 255 255 255)]
+(define (basic-sky #:radius [r 500]
+                   #:color [col (make-color 255 255 255)]
                    #:opacity [opac 0.9]
                    #:components-list [c '()])
   (entity "sky" (append (list (any-color-stx->color-obj col)
+                              (radius r)
                               (opacity opac))
                         c)))
   
@@ -568,8 +571,29 @@
                                       (on-click (list-objects->hash mouse-click)))
                                 (append a-list c))))
 
-(define (torus #:components-list [c '()])
-  (entity "torus" c))
+(define (basic-torus #:position [posn (position 0.0 0.0 0.0)]
+                     #:rotation [rota (rotation 0.0 0.0 0.0)]
+                     #:scale [sca (scale 1.0 1.0 1.0)]
+                     #:radius [r 0.5]
+                     #:radius-tubular [rt 0.3]
+                     #:color [col (make-color 128 128 128)]
+                     #:opacity [opac 1.0]
+                     #:texture [tex ""]
+                     #:on-mouse-enter [mouse-enter #f]
+                     #:on-mouse-leave [mouse-leave #f]
+                     #:on-mouse-click [mouse-click #f]
+                     #:animations-list [a-list '()]
+                     #:components-list [c '()])
+  (entity "torus" (append (list posn rota sca
+                                      (any-color-stx->color-obj col)
+                                      (radius r)
+                                      (radius-tubular rt)
+                                      (opacity opac)
+                                      (src tex)
+                                      (mouseenter (list-objects->hash mouse-enter))
+                                      (mouseleave (list-objects->hash mouse-leave))
+                                      (on-click (list-objects->hash mouse-click)))
+                                (append a-list c))))
 
 (define (torus-knot #:components-list [c '()])
   (entity "torusKnot" c))

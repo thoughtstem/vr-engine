@@ -81,6 +81,7 @@
 (define-attribute height (n) "~a")
 (define-attribute width  (n) "~a")
 (define-attribute radius (n) "~a")
+(define-attribute radius-tubular (n) "~a")
 (define-attribute radius-bottom (n) "~a")
 (define-attribute radius-top (n) "~a")
 
