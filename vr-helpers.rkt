@@ -21,7 +21,8 @@
  basic-sphere
  basic-tetrahedron
  basic-torus
-          
+
+ basic-text
  basic-circle
  basic-plane
  basic-ring
@@ -362,12 +363,14 @@
                                  (visible vis))
                            c)))
 
-(define (basic-camera #:fly? [fly? #f]
+(define (basic-camera #:position [pos (position 0 1.6 0)]
+                      #:fly? [fly? #f]
                       #:acceleration [accel 65]
                       #:cursor [cursor (basic-cursor #:visible "false")]
                       #:components-list [comps '()])
   (entity "camera" (append (list (wasd-controls (hash "fly" (if fly? "true" "false")
                                                       "acceleration" accel))
+                                 pos
                                  cursor)
                            comps)))
 
@@ -598,7 +601,38 @@
 (define (torus-knot #:components-list [c '()])
   (entity "torusKnot" c))
 
-;-------------------------- 2D OBJECTS  
+;-------------------------- 2D OBJECTS
+(define (basic-text #:position [posn (position 0.0 0.0 0.0)]
+                    #:rotation [rota (rotation 0.0 0.0 0.0)]
+                    #:scale [sca (scale 1.0 1.0 1.0)]
+                    #:value [v "Hello, World!"]
+                    #:align [a 'center]
+                    #:baseline [b 'center]
+                    #:font [f 'roboto]
+                    #:letter-spacing [space 1]
+                    #:color [col (make-color 255 255 255)]
+                    #:opacity [opac 1.0]
+                    #:side [s 'double]
+                    #:on-mouse-enter [mouse-enter #f]
+                    #:on-mouse-leave [mouse-leave #f]
+                    #:on-mouse-click [mouse-click #f]
+                    #:animations-list [a-list '()]
+                    #:components-list [c '()]
+                    )
+  (entity "text" (append (list posn rota sca
+                               (value v)
+                               (align a)
+                               (baseline b)
+                               (font f)
+                               (letter-spacing space)
+                               (any-color-stx->color-obj col)
+                               (opacity opac)
+                               (side s)
+                               (mouseenter (list-objects->hash mouse-enter))
+                               (mouseleave (list-objects->hash mouse-leave))
+                               (on-click (list-objects->hash mouse-click)))
+                           (append a-list c))))
+
 (define (basic-circle #:position [posn (position 0.0 0.0 0.0)]
                       #:rotation [rota (rotation 0.0 0.0 0.0)]
                       #:scale [sca (scale 1.0 1.0 1.0)]

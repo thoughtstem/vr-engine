@@ -81,7 +81,6 @@
 (define-attribute height (n) "~a")
 (define-attribute width  (n) "~a")
 (define-attribute radius (n) "~a")
-(define-attribute radius-tubular (n) "~a")
 (define-attribute radius-bottom (n) "~a")
 (define-attribute radius-top (n) "~a")
 
@@ -139,8 +138,14 @@
 (define-attribute repeat    (s) "~a")
 (define-attribute fill      (s) "~a")
 (define-attribute shadow    () "")
-
 (define-attribute material (s) "~a")
+(define-attribute radius-tubular (n) "~a")
+(define-attribute value (s) "~a")
+(define-attribute align (s) "~a")
+(define-attribute baseline (s) "~a")
+(define-attribute font (s) "~a")
+(define-attribute letter-spacing (s) "~a")
+(define-attribute side (s) "~a")
 
 ;-----------
 (define-attribute transparent (b) "~a")
