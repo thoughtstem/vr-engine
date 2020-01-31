@@ -13,6 +13,7 @@
          update-attributes
          scene->html
          make-color
+         make-scale
          wasd-controls
          safe-position
          ;make-animation
@@ -98,6 +99,13 @@
 
 (define-attribute rotation (x y z) "~a ~a ~a")
 (define-attribute scale    (x y z) "~a ~a ~a")
+
+(define (make-scale x (y -1) (z -1))
+  (cond
+    [(and (positive? x) (= y -1) (= z -1)) (scale x x x)]
+    [(and (positive? x) (positive? y) (positive? z)) (scale x y z)]
+    [else #f]))
+
 (define-attribute variance (x y z) "~a ~a ~a")
 
 (define-attribute color    (r g b a) "rgba(~a, ~a, ~a, ~a)")
