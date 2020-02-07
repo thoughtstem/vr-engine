@@ -10,7 +10,8 @@
   )
  (except-out (all-from-out "./vr.rkt")
              color
-             position)
+             position
+             scale)
  ;(all-from-out 2htdp/image) 
  )
 
@@ -20,6 +21,7 @@
          "./attribute-definer.rkt"
          (except-in "./vr.rkt"
                     color
-                    position)
+                    position
+                    scale)
          "./vr-helpers.rkt"
          )
