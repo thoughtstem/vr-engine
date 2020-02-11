@@ -58,8 +58,10 @@
 
 (define-attribute fog (d c) "type: exponential; density: ~a; color: ~a")
 (define-attribute preset (s) "~a")
+
 (define-attribute no-click () "")
 (define-attribute material.color (s) "~a")
+
 (define-attribute raycaster () "objects: :not([no-click=\"\"])")
 
 (define-attribute maxAge (n) "~a")
@@ -89,6 +91,7 @@
 (define-attribute intensity (n) "~a")
 (define-attribute angle (n) "~a")
 (define-attribute decay (n) "~a")
+(define-attribute distance (n) "~a")
 (define-attribute ground-color (r g b) "rgb(~a, ~a, ~a)")
 
 (define-attribute position (x y z) "~a ~a ~a")
@@ -164,6 +167,7 @@
 (define-attribute depth  (n) "~a")
 (define-attribute radius-inner (n) "~a")
 (define-attribute radius-outer (n) "~a")
+(define-attribute segments-theta (n) "~a")
 (define-attribute vertex (x y z) "~a ~a ~a")
 (define-attribute vertex-a (x y z) "~a ~a ~a")
 (define-attribute vertex-b (x y z) "~a ~a ~a")

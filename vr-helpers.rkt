@@ -655,6 +655,7 @@
                                #:color [col (make-color 128 128 128)]
                                #:opacity [opac 1.0]
                                #:texture [tex ""]
+                               #:shader  [sha "standard"]
                                #:on-mouse-enter [mouse-enter #f]
                                #:on-mouse-leave [mouse-leave #f]
                                #:on-mouse-click [mouse-click #f]
@@ -668,6 +669,7 @@
         #:color             [col (or/c string? symbol? object?)] 
         #:opacity           [opac between-0-1-inclusive?]
         #:texture           [tex (or/c string? h:image?)]
+        #:shader            [sha (or/c string? symbol?)]
         #:on-mouse-enter    [mouse-enter (or/c #f (listof object?))] 
         #:on-mouse-leave    [mouse-leave (or/c #f (listof object?))]
         #:on-mouse-click    [mouse-click (or/c #f (listof object?))]
@@ -681,6 +683,7 @@
                                  (radius r)
                                  (opacity opac)
                                  (src tex)
+                                 (material (hash "shader" sha))
                                  (mouseenter (list-objects->hash mouse-enter))
                                  (mouseleave (list-objects->hash mouse-leave))
                                  (on-click (list-objects->hash mouse-click))
@@ -747,7 +750,7 @@
         #:radius-tubular    [rt real?]
         #:color             [col (or/c string? symbol? object?)] 
         #:opacity           [opac between-0-1-inclusive?]
-        #:texture           [tex (or/c #f string? h:image?)]
+        #:texture           [tex (or/c string? h:image?)]
         #:on-mouse-enter    [mouse-enter (or/c #f (listof object?))] 
         #:on-mouse-leave    [mouse-leave (or/c #f (listof object?))]
         #:on-mouse-click    [mouse-click (or/c #f (listof object?))]
@@ -933,8 +936,10 @@
                                (any-color-stx->color-obj col)
                                (radius-inner radi)
                                (radius-outer rado)
+                               (segments-theta 64)
                                (opacity opac)
                                (src tex)
+                               (material (hash "side" "double"))
                                (mouseenter (list-objects->hash mouse-enter))
                                (mouseleave (list-objects->hash mouse-leave))
                                (on-click (list-objects->hash mouse-click)))
