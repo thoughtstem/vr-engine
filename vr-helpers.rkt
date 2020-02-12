@@ -1,43 +1,19 @@
-#lang racket
+#lang at-exp racket
 
 (provide
  send-to-browser
  ;--------------
  vr-scene
- basic-environment
- ;basic-forest
- ;basic-volcano
+
  basic-entity
  basic-sky
  basic-camera
  basic-cursor
-          
- basic-box
- basic-cone
- basic-cylinder
- basic-dodecahedron
- basic-icosahedron
- basic-octahedron
- basic-sphere
- basic-tetrahedron
- basic-torus
-
- basic-text
- basic-circle
- basic-plane
- basic-ring
- basic-triangle
-
- basic-stars
- basic-ocean
- ;basic-sun
- basic-particles
-   
+           
  ;animation
  light
  assets
  assets-item
- 3d-model
  gltf-model
 
  (rename-out [make-color color]
@@ -63,7 +39,11 @@
          "./vr.rkt"
          ;"./assets.rkt"
          image-coloring
+         ts-kata-util
          )
+
+(require scribble/srcdoc)
+(require (for-doc racket/base scribble/manual ))
 
 
 ;Apparently this needs to be a macro so that scene->html executes in the context of the
@@ -260,20 +240,20 @@
 
 
 ;-------------------------- ENVIRONMENTS
-(define/contract (basic-environment #:basic?                [basic? #t]
-                                    #:preset                [preset 'default]
-                                    #:dressing              [dressing #f]
-                                    #:dressing-amount       [amount #f]
-                                    #:dressing-color        [color #f]
-                                    #:dressing-scale        [scale #f]
-                                    #:dressing-variance     [variance #f]
-                                    #:fog                   [fog 0]
-                                    #:ground                [ground #f]
-                                    #:ground-color-1        [color-1 #f]
-                                    #:ground-color-2        [color-2 #f]
-                                    #:ground-texture        [texture #f]
-                                    #:horizon-color         [horizon #f]
-                                    #:sky-color             [sky #f])
+(define/contract/doc (basic-environment #:basic?                [basic? #t]
+                                        #:preset                [preset 'default]
+                                        #:dressing              [dressing #f]
+                                        #:dressing-amount       [amount #f]
+                                        #:dressing-color        [color #f]
+                                        #:dressing-scale        [scale #f]
+                                        #:dressing-variance     [variance #f]
+                                        #:fog                   [fog 0]
+                                        #:ground                [ground #f]
+                                        #:ground-color-1        [color-1 #f]
+                                        #:ground-color-2        [color-2 #f]
+                                        #:ground-texture        [texture #f]
+                                        #:horizon-color         [horizon #f]
+                                        #:sky-color             [sky #f])
   (->i ()
        ( #:basic?                [basic? boolean?]
          #:preset                [preset (or/c preset?)]
@@ -290,6 +270,9 @@
          #:horizon-color         [horizon (or/c string? symbol? object?)]
          #:sky-color             [sky (or/c string? symbol? object?)] )
        [returns entity?])
+
+  @{Basic Environment.}
+  
   (define env-hash (hash
                     "preset"         (~a preset)
                     "dressing"       (~a dressing)
@@ -318,62 +301,6 @@
   (basic-entity
    #:components-list (list env)))
 
-#|
-(define (basic-forest #:preset          [preset 'forest]
-                      #:dressing        [dressing 'trees]
-                      #:dressing-amount [amount 500]
-                      #:dressing-color  [color "#888b1d"]
-                      #:dressing-scale  [scale 1]
-                      #:fog             [fog 0.800]
-                      #:ground          [ground 'noise]
-                      #:ground-color-1  [color-1 "#937a24"]
-                      #:ground-color-2  [color-2 "#987d2e"]
-                      #:ground-texture  [texture 'squares]
-                      #:horizon-color   [horizon "#eff9b7"]
-                      #:sky-color   [sky "#eff9b7"]
-                      #:other-components-list [comps '()])
-
-  (basic-environment #:preset          preset
-                     #:dressing        dressing
-                     #:dressing-amount amount
-                     #:dressing-color  color
-                     #:dressing-scale  scale
-                     #:fog             fog
-                     #:ground          ground
-                     #:ground-color-1  color-1
-                     #:ground-color-2  color-2
-                     #:ground-texture  texture
-                     #:horizon-color   horizon
-                     #:sky-color       sky
-                     #:other-components-list comps))
-  
-(define (basic-volcano #:preset          [preset 'volcano]
-                       #:dressing        [dressing 'arches]
-                       #:dressing-amount [amount 15]
-                       #:dressing-color  [color "#fb0803"]
-                       #:dressing-scale  [scale 3]
-                       #:fog             [fog 0.870]
-                       #:ground          [ground 'canyon]
-                       #:ground-color-1  [color-1 "#fb0803"]
-                       #:ground-color-2  [color-2 "#510000"]
-                       #:ground-texture  [texture 'walkernoise]
-                       #:horizon-color   [horizon "#f62300"]
-                       #:sky-color       [sky "#4a070f"])
-
-  (basic-environment #:preset          preset
-                     #:dressing        dressing
-                     #:dressing-amount amount
-                     #:dressing-color  color
-                     #:dressing-scale  scale
-                     #:fog             fog
-                     #:ground          ground
-                     #:ground-color-1  color-1
-                     #:ground-color-2  color-2
-                     #:ground-texture  texture
-                     #:horizon-color   horizon
-                     #:sky-color       sky)
-  )
-|#
 ;-------------------------- SKY - CAMERA - CURSOR
 (define (basic-cursor #:color   [col (make-color 0 0 0)]
                       #:opacity [opac 0.8]
@@ -405,20 +332,20 @@
                         c)))
   
 ;-------------------------- 3D OBJECTS
-(define/contract (basic-box  #:position [posn (position 0.0 0.0 0.0)]
-                             #:rotation [rota (rotation 0.0 0.0 0.0)] 
-                             #:scale [sca (make-scale 1.0 1.0 1.0)] 
-                             #:depth [dep 1.0] 
-                             #:height [hei 1.0] 
-                             #:width [wid 1.0] 
-                             #:color [col (make-color 128 128 128)] 
-                             #:opacity [opac 1.0] 
-                             #:texture [tex ""] 
-                             #:on-mouse-enter [mouse-enter #f] 
-                             #:on-mouse-leave [mouse-leave #f] 
-                             #:on-mouse-click [mouse-click #f] 
-                             #:animations-list [a-list '()] 
-                             #:components-list [c '()]) 
+(define/contract/doc (basic-box  #:position [posn (position 0.0 0.0 0.0)]
+                                 #:rotation [rota (rotation 0.0 0.0 0.0)] 
+                                 #:scale [sca (make-scale 1.0 1.0 1.0)] 
+                                 #:depth [dep 1.0] 
+                                 #:height [hei 1.0] 
+                                 #:width [wid 1.0] 
+                                 #:color [col (make-color 128 128 128)] 
+                                 #:opacity [opac 1.0] 
+                                 #:texture [tex ""] 
+                                 #:on-mouse-enter [mouse-enter #f] 
+                                 #:on-mouse-leave [mouse-leave #f] 
+                                 #:on-mouse-click [mouse-click #f] 
+                                 #:animations-list [a-list '()] 
+                                 #:components-list [c '()]) 
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -435,6 +362,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Box.}
+  
   (entity "box" (append (list posn rota (if (number? sca)
                                             (make-scale sca sca sca)
                                             sca)
@@ -449,20 +379,20 @@
                               (on-click (list-objects->hash mouse-click)))
                         (append a-list c))))
 
-(define/contract (basic-cone #:position [posn (position 0.0 0.0 0.0)]
-                             #:rotation [rota (rotation 0.0 0.0 0.0)]
-                             #:scale [sca (make-scale 1.0 1.0 1.0)]                     
-                             #:radius-bottom [radb 1.0]
-                             #:radius-top [radt 0.01]
-                             #:height [hei 1.0]
-                             #:color [col (make-color 128 128 128)]
-                             #:opacity [opac 1.0]
-                             #:texture [tex ""]
-                             #:on-mouse-enter [mouse-enter #f]
-                             #:on-mouse-leave [mouse-leave #f]
-                             #:on-mouse-click [mouse-click #f]
-                             #:animations-list [a-list '()]
-                             #:components-list [c '()])
+(define/contract/doc (basic-cone #:position [posn (position 0.0 0.0 0.0)]
+                                 #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                 #:scale [sca (make-scale 1.0 1.0 1.0)]                     
+                                 #:radius-bottom [radb 1.0]
+                                 #:radius-top [radt 0.01]
+                                 #:height [hei 1.0]
+                                 #:color [col (make-color 128 128 128)]
+                                 #:opacity [opac 1.0]
+                                 #:texture [tex ""]
+                                 #:on-mouse-enter [mouse-enter #f]
+                                 #:on-mouse-leave [mouse-leave #f]
+                                 #:on-mouse-click [mouse-click #f]
+                                 #:animations-list [a-list '()]
+                                 #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -479,6 +409,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Cone.}
+  
   (entity "cone" (append (list posn rota (if (number? sca)
                                              (make-scale sca sca sca)
                                              sca)
@@ -493,19 +426,19 @@
                                (on-click (list-objects->hash mouse-click)))
                          (append a-list c))))
   
-(define/contract (basic-cylinder #:position [posn (position 0.0 0.0 0.0)]
-                                 #:rotation [rota (rotation 0.0 0.0 0.0)]
-                                 #:scale [sca (make-scale 1.0 1.0 1.0)]
-                                 #:height [hei 1.0]
-                                 #:radius [r 0.5]
-                                 #:color [col (make-color 128 128 128)]
-                                 #:opacity [opac 1.0]
-                                 #:texture [tex ""]
-                                 #:on-mouse-enter [mouse-enter #f]
-                                 #:on-mouse-leave [mouse-leave #f]
-                                 #:on-mouse-click [mouse-click #f]
-                                 #:animations-list [a-list '()]
-                                 #:components-list [c '()])
+(define/contract/doc (basic-cylinder #:position [posn (position 0.0 0.0 0.0)]
+                                     #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                     #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                     #:height [hei 1.0]
+                                     #:radius [r 0.5]
+                                     #:color [col (make-color 128 128 128)]
+                                     #:opacity [opac 1.0]
+                                     #:texture [tex ""]
+                                     #:on-mouse-enter [mouse-enter #f]
+                                     #:on-mouse-leave [mouse-leave #f]
+                                     #:on-mouse-click [mouse-click #f]
+                                     #:animations-list [a-list '()]
+                                     #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -521,6 +454,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Cylinder.}
+  
   (entity "cylinder" (append (list posn rota (if (number? sca)
                                                  (make-scale sca sca sca)
                                                  sca)
@@ -534,18 +470,18 @@
                                    (on-click (list-objects->hash mouse-click)))
                              (append a-list c))))
 
-(define/contract (basic-dodecahedron #:position [posn (position 0.0 0.0 0.0)]
-                                     #:rotation [rota (rotation 0.0 0.0 0.0)]
-                                     #:scale [sca (make-scale 1.0 1.0 1.0)]
-                                     #:radius [r 0.5]
-                                     #:color [col (make-color 128 128 128)]
-                                     #:opacity [opac 1.0]
-                                     #:texture [tex ""]
-                                     #:on-mouse-enter [mouse-enter #f]
-                                     #:on-mouse-leave [mouse-leave #f]
-                                     #:on-mouse-click [mouse-click #f]
-                                     #:animations-list [a-list '()]
-                                     #:components-list [c '()])
+(define/contract/doc (basic-dodecahedron #:position [posn (position 0.0 0.0 0.0)]
+                                         #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                         #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                         #:radius [r 0.5]
+                                         #:color [col (make-color 128 128 128)]
+                                         #:opacity [opac 1.0]
+                                         #:texture [tex ""]
+                                         #:on-mouse-enter [mouse-enter #f]
+                                         #:on-mouse-leave [mouse-leave #f]
+                                         #:on-mouse-click [mouse-click #f]
+                                         #:animations-list [a-list '()]
+                                         #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -560,6 +496,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Dodecahedron.}
+  
   (entity "dodecahedron" (append (list posn rota (if (number? sca)
                                                      (make-scale sca sca sca)
                                                      sca)
@@ -572,18 +511,18 @@
                                        (on-click (list-objects->hash mouse-click)))
                                  (append a-list c))))
 
-(define/contract (basic-icosahedron #:position [posn (position 0.0 0.0 0.0)]
-                                    #:rotation [rota (rotation 0.0 0.0 0.0)]
-                                    #:scale [sca (make-scale 1.0 1.0 1.0)]
-                                    #:radius [r 0.5]
-                                    #:color [col (make-color 128 128 128)]
-                                    #:opacity [opac 1.0]
-                                    #:texture [tex ""]
-                                    #:on-mouse-enter [mouse-enter #f]
-                                    #:on-mouse-leave [mouse-leave #f]
-                                    #:on-mouse-click [mouse-click #f]
-                                    #:animations-list [a-list '()]
-                                    #:components-list [c '()])
+(define/contract/doc (basic-icosahedron #:position [posn (position 0.0 0.0 0.0)]
+                                        #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                        #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                        #:radius [r 0.5]
+                                        #:color [col (make-color 128 128 128)]
+                                        #:opacity [opac 1.0]
+                                        #:texture [tex ""]
+                                        #:on-mouse-enter [mouse-enter #f]
+                                        #:on-mouse-leave [mouse-leave #f]
+                                        #:on-mouse-click [mouse-click #f]
+                                        #:animations-list [a-list '()]
+                                        #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -598,6 +537,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Icosahedron.}
+  
   (entity "icosahedron" (append (list posn rota (if (number? sca)
                                                     (make-scale sca sca sca)
                                                     sca)
@@ -610,18 +552,18 @@
                                       (on-click (list-objects->hash mouse-click)))
                                 (append a-list c))))
   
-(define/contract (basic-octahedron #:position [posn (position 0.0 0.0 0.0)]
-                                   #:rotation [rota (rotation 0.0 0.0 0.0)]
-                                   #:scale [sca (make-scale 1.0 1.0 1.0)]
-                                   #:radius [r 0.5]
-                                   #:color [col (make-color 128 128 128)]
-                                   #:opacity [opac 1.0]
-                                   #:texture [tex ""]
-                                   #:on-mouse-enter [mouse-enter #f]
-                                   #:on-mouse-leave [mouse-leave #f]
-                                   #:on-mouse-click [mouse-click #f]
-                                   #:animations-list [a-list '()]
-                                   #:components-list [c '()])
+(define/contract/doc (basic-octahedron #:position [posn (position 0.0 0.0 0.0)]
+                                       #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                       #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                       #:radius [r 0.5]
+                                       #:color [col (make-color 128 128 128)]
+                                       #:opacity [opac 1.0]
+                                       #:texture [tex ""]
+                                       #:on-mouse-enter [mouse-enter #f]
+                                       #:on-mouse-leave [mouse-leave #f]
+                                       #:on-mouse-click [mouse-click #f]
+                                       #:animations-list [a-list '()]
+                                       #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -636,6 +578,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Octahedron.}
+  
   (entity "octahedron" (append (list posn rota (if (number? sca)
                                                    (make-scale sca sca sca)
                                                    sca)
@@ -648,19 +593,19 @@
                                      (on-click (list-objects->hash mouse-click)))
                                (append a-list c))))
   
-(define/contract (basic-sphere #:position [posn (position 0.0 0.0 0.0)]
-                               #:rotation [rota (rotation 0.0 0.0 0.0)]
-                               #:scale [sca (make-scale 1.0 1.0 1.0)]
-                               #:radius [r 1.0]
-                               #:color [col (make-color 128 128 128)]
-                               #:opacity [opac 1.0]
-                               #:texture [tex ""]
-                               #:shader  [sha "standard"]
-                               #:on-mouse-enter [mouse-enter #f]
-                               #:on-mouse-leave [mouse-leave #f]
-                               #:on-mouse-click [mouse-click #f]
-                               #:animations-list [a-list '()]
-                               #:components-list [c '()])
+(define/contract/doc (basic-sphere #:position [posn (position 0.0 0.0 0.0)]
+                                   #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                   #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                   #:radius [r 1.0]
+                                   #:color [col (make-color 128 128 128)]
+                                   #:opacity [opac 1.0]
+                                   #:texture [tex ""]
+                                   #:shader  [sha "standard"]
+                                   #:on-mouse-enter [mouse-enter #f]
+                                   #:on-mouse-leave [mouse-leave #f]
+                                   #:on-mouse-click [mouse-click #f]
+                                   #:animations-list [a-list '()]
+                                   #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -676,6 +621,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Sphere.}
+  
   (entity "sphere" (append (list posn rota (if (number? sca)
                                                (make-scale sca sca sca)
                                                sca)
@@ -691,18 +639,18 @@
                            (append a-list c))))
 
 
-(define/contract (basic-tetrahedron #:position [posn (position 0.0 0.0 0.0)]
-                                    #:rotation [rota (rotation 0.0 0.0 0.0)]
-                                    #:scale [sca (make-scale 1.0 1.0 1.0)]
-                                    #:radius [r 0.5]
-                                    #:color [col (make-color 128 128 128)]
-                                    #:opacity [opac 1.0]
-                                    #:texture [tex ""]
-                                    #:on-mouse-enter [mouse-enter #f]
-                                    #:on-mouse-leave [mouse-leave #f]
-                                    #:on-mouse-click [mouse-click #f]
-                                    #:animations-list [a-list '()]
-                                    #:components-list [c '()])
+(define/contract/doc (basic-tetrahedron #:position [posn (position 0.0 0.0 0.0)]
+                                        #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                        #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                        #:radius [r 0.5]
+                                        #:color [col (make-color 128 128 128)]
+                                        #:opacity [opac 1.0]
+                                        #:texture [tex ""]
+                                        #:on-mouse-enter [mouse-enter #f]
+                                        #:on-mouse-leave [mouse-leave #f]
+                                        #:on-mouse-click [mouse-click #f]
+                                        #:animations-list [a-list '()]
+                                        #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -717,6 +665,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Tetrahedron.}
+  
   (entity "tetrahedron" (append (list posn rota (if (number? sca)
                                                     (make-scale sca sca sca)
                                                     sca)
@@ -729,19 +680,19 @@
                                       (on-click (list-objects->hash mouse-click)))
                                 (append a-list c))))
 
-(define/contract (basic-torus #:position [posn (position 0.0 0.0 0.0)]
-                              #:rotation [rota (rotation 0.0 0.0 0.0)]
-                              #:scale [sca (make-scale 1.0 1.0 1.0)]
-                              #:radius [r 0.5]
-                              #:radius-tubular [rt 0.3]
-                              #:color [col (make-color 128 128 128)]
-                              #:opacity [opac 1.0]
-                              #:texture [tex ""]
-                              #:on-mouse-enter [mouse-enter #f]
-                              #:on-mouse-leave [mouse-leave #f]
-                              #:on-mouse-click [mouse-click #f]
-                              #:animations-list [a-list '()]
-                              #:components-list [c '()])
+(define/contract/doc (basic-torus #:position [posn (position 0.0 0.0 0.0)]
+                                  #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                  #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                  #:radius [r 0.5]
+                                  #:radius-tubular [rt 0.3]
+                                  #:color [col (make-color 128 128 128)]
+                                  #:opacity [opac 1.0]
+                                  #:texture [tex ""]
+                                  #:on-mouse-enter [mouse-enter #f]
+                                  #:on-mouse-leave [mouse-leave #f]
+                                  #:on-mouse-click [mouse-click #f]
+                                  #:animations-list [a-list '()]
+                                  #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -757,6 +708,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Torus.}
+  
   (entity "torus" (append (list posn rota (if (number? sca)
                                               (make-scale sca sca sca)
                                               sca)
@@ -774,23 +728,23 @@
   (entity "torusKnot" c))
 
 ;-------------------------- 2D OBJECTS
-(define/contract (basic-text #:position [posn (position 0.0 0.0 0.0)]
-                             #:rotation [rota (rotation 0.0 0.0 0.0)]
-                             #:scale [sca (make-scale 1.0 1.0 1.0)]
-                             #:value [v "Hello, World!"]
-                             #:align [a 'center]
-                             #:baseline [b 'center]
-                             #:font [f 'roboto]
-                             #:letter-spacing [space 1]
-                             #:color [col (make-color 255 255 255)]
-                             #:opacity [opac 1.0]
-                             #:side [s 'double]
-                             #:on-mouse-enter [mouse-enter #f]
-                             #:on-mouse-leave [mouse-leave #f]
-                             #:on-mouse-click [mouse-click #f]
-                             #:animations-list [a-list '()]
-                             #:components-list [c '()]
-                             )
+(define/contract/doc (basic-text #:position [posn (position 0.0 0.0 0.0)]
+                                 #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                 #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                 #:value [v "Hello, World!"]
+                                 #:align [a 'center]
+                                 #:baseline [b 'center]
+                                 #:font [f 'roboto]
+                                 #:letter-spacing [space 1]
+                                 #:color [col (make-color 255 255 255)]
+                                 #:opacity [opac 1.0]
+                                 #:side [s 'double]
+                                 #:on-mouse-enter [mouse-enter #f]
+                                 #:on-mouse-leave [mouse-leave #f]
+                                 #:on-mouse-click [mouse-click #f]
+                                 #:animations-list [a-list '()]
+                                 #:components-list [c '()]
+                                 )
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -809,6 +763,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Text.}
+  
   (entity "text" (append (list posn rota (if (number? sca)
                                              (make-scale sca sca sca)
                                              sca)
@@ -825,18 +782,18 @@
                                (on-click (list-objects->hash mouse-click)))
                          (append a-list c))))
 
-(define/contract (basic-circle #:position [posn (position 0.0 0.0 0.0)]
-                               #:rotation [rota (rotation 0.0 0.0 0.0)]
-                               #:scale [sca (make-scale 1.0 1.0 1.0)]
-                               #:radius [r 0.5]
-                               #:color [col (make-color 128 128 128)]
-                               #:opacity [opac 1.0]
-                               #:texture [tex ""]
-                               #:on-mouse-enter [mouse-enter #f]
-                               #:on-mouse-leave [mouse-leave #f]
-                               #:on-mouse-click [mouse-click #f]
-                               #:animations-list [a-list '()]
-                               #:components-list [c '()])
+(define/contract/doc (basic-circle #:position [posn (position 0.0 0.0 0.0)]
+                                   #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                   #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                   #:radius [r 0.5]
+                                   #:color [col (make-color 128 128 128)]
+                                   #:opacity [opac 1.0]
+                                   #:texture [tex ""]
+                                   #:on-mouse-enter [mouse-enter #f]
+                                   #:on-mouse-leave [mouse-leave #f]
+                                   #:on-mouse-click [mouse-click #f]
+                                   #:animations-list [a-list '()]
+                                   #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -851,6 +808,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Circle.}
+  
   (entity "circle" (append (list posn rota (if (number? sca)
                                                (make-scale sca sca sca)
                                                sca)
@@ -863,19 +823,19 @@
                                  (on-click (list-objects->hash mouse-click)))
                            (append a-list c))))
 
-(define/contract (basic-plane #:position [posn (position 0.0 0.0 0.0)]
-                              #:rotation [rota (rotation 0.0 0.0 0.0)]
-                              #:scale [sca (make-scale 1.0 1.0 1.0)]
-                              #:color [col (make-color 128 128 128)]
-                              #:opacity [opac 1.0]
-                              #:texture [tex ""]
-                              #:on-mouse-enter [mouse-enter #f]
-                              #:on-mouse-leave [mouse-leave #f]
-                              #:on-mouse-click [mouse-click #f]
-                              #:animations-list [a-list '()]
-                              #:height [hei 1.0]
-                              #:width [wid 1.0]
-                              #:components-list [c '()])
+(define/contract/doc (basic-plane #:position [posn (position 0.0 0.0 0.0)]
+                                  #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                  #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                  #:color [col (make-color 128 128 128)]
+                                  #:opacity [opac 1.0]
+                                  #:texture [tex ""]
+                                  #:on-mouse-enter [mouse-enter #f]
+                                  #:on-mouse-leave [mouse-leave #f]
+                                  #:on-mouse-click [mouse-click #f]
+                                  #:animations-list [a-list '()]
+                                  #:height [hei 1.0]
+                                  #:width [wid 1.0]
+                                  #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -886,9 +846,14 @@
         #:on-mouse-enter    [mouse-enter (or/c #f (listof object?))] 
         #:on-mouse-leave    [mouse-leave (or/c #f (listof object?))]
         #:on-mouse-click    [mouse-click (or/c #f (listof object?))]
-        #:animations-list   [a-list (or/c empty? (listof object?))] 
+        #:animations-list   [a-list (or/c empty? (listof object?))]
+        #:height            [hei real?]
+        #:width             [wid real?]
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Plane.}
+  
   (entity "plane" (append (list posn rota (if (number? sca)
                                               (make-scale sca sca sca)
                                               sca)
@@ -902,20 +867,20 @@
                                 (on-click (list-objects->hash mouse-click)))
                           (append a-list c))))
 
-(define/contract (basic-ring #:position [posn (position 0.0 0.0 0.0)]
-                             #:rotation [rota (rotation 0.0 0.0 0.0)]
-                             #:scale [sca (make-scale 1.0 1.0 1.0)]
-                             #:color [col (make-color 128 128 128)]
-                             #:radius-inner [radi 0.8]
-                             #:radius-outer [rado 1.2]
-                             #:opacity [opac 1.0]
-                             #:texture [tex ""]
-                             #:shader  [sha "standard"]
-                             #:on-mouse-enter [mouse-enter #f]
-                             #:on-mouse-leave [mouse-leave #f]
-                             #:on-mouse-click [mouse-click #f]
-                             #:animations-list [a-list '()]
-                             #:components-list [c '()])
+(define/contract/doc (basic-ring #:position [posn (position 0.0 0.0 0.0)]
+                                 #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                 #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                 #:color [col (make-color 128 128 128)]
+                                 #:radius-inner [radi 0.8]
+                                 #:radius-outer [rado 1.2]
+                                 #:opacity [opac 1.0]
+                                 #:texture [tex ""]
+                                 #:shader  [sha "standard"]
+                                 #:on-mouse-enter [mouse-enter #f]
+                                 #:on-mouse-leave [mouse-leave #f]
+                                 #:on-mouse-click [mouse-click #f]
+                                 #:animations-list [a-list '()]
+                                 #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -932,6 +897,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Ring.}
+  
   (entity "ring" (append (list posn rota (if (number? sca)
                                              (make-scale sca sca sca)
                                              sca)
@@ -948,20 +916,20 @@
                                (on-click (list-objects->hash mouse-click)))
                          (append a-list c))))
 
-(define/contract (basic-triangle #:position [posn (position 0.0 0.0 0.0)]
-                                 #:rotation [rota (rotation 0.0 0.0 0.0)]
-                                 #:scale [sca (make-scale 1.0 1.0 1.0)]
-                                 #:color [col (make-color 128 128 128)]
-                                 ;#:vertex-a [a (vertex  0.0  0.5 0.0)]
-                                 ;#:vertex-b [b (vertex -0.5 -0.5 0.0)]
-                                 ;#:vertex-c [c (vertex  0.5 -0.5 0.0)]
-                                 #:opacity [opac 1.0]
-                                 #:texture [tex ""]
-                                 #:on-mouse-enter [mouse-enter #f]
-                                 #:on-mouse-leave [mouse-leave #f]
-                                 #:on-mouse-click [mouse-click #f]
-                                 #:animations-list [a-list '()]
-                                 #:components-list [c '()])
+(define/contract/doc (basic-triangle #:position [posn (position 0.0 0.0 0.0)]
+                                     #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                     #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                     #:color [col (make-color 128 128 128)]
+                                     ;#:vertex-a [a (vertex  0.0  0.5 0.0)]
+                                     ;#:vertex-b [b (vertex -0.5 -0.5 0.0)]
+                                     ;#:vertex-c [c (vertex  0.5 -0.5 0.0)]
+                                     #:opacity [opac 1.0]
+                                     #:texture [tex ""]
+                                     #:on-mouse-enter [mouse-enter #f]
+                                     #:on-mouse-leave [mouse-leave #f]
+                                     #:on-mouse-click [mouse-click #f]
+                                     #:animations-list [a-list '()]
+                                     #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -975,6 +943,9 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic Triangle.}
+  
   (entity "triangle" (append (list posn rota (if (number? sca)
                                                  (make-scale sca sca sca)
                                                  sca)
@@ -990,12 +961,12 @@
                              (append a-list c))))
 
 ;-------------------------- CUSTOM OBJECTS
-(define/contract (3d-model #:position        [posn (position 0.0 0.0 0.0)]
-                           #:rotation        [rota (rotation 0.0 0.0 0.0)]
-                           #:scale           [sca (make-scale 1.0 1.0 1.0)]
-                           #:model           [model ""]
-                           #:animations-list  [a-list '()]
-                           #:components-list [c '()])
+(define/contract/doc (3d-model #:position        [posn (position 0.0 0.0 0.0)]
+                               #:rotation        [rota (rotation 0.0 0.0 0.0)]
+                               #:scale           [sca (make-scale 1.0 1.0 1.0)]
+                               #:model           [model ""]
+                               #:animations-list  [a-list '()]
+                               #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -1004,21 +975,24 @@
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
+
+  @{Basic 3D Model.}
+  
   (entity "entity" (append (list posn rota (if (number? sca)
                                                (make-scale sca sca sca)
                                                sca) model)
                            (append a-list
                                    c))))
 
-(define/contract (basic-stars #:position [posn (position 0.0 0.0 0.0)]
-                              #:rotation [rota (rotation 0.0 0.0 0.0)]
-                              #:scale [sca (make-scale 1.0 1.0 1.0)]
-                              #:color [col "white"]
-                              #:count [count 10000]
-                              #:depth [dep 180]
-                              #:radius [rad 180]
-                              #:star-size [size 1.0]
-                              #:texture [texture ""])
+(define/contract/doc (basic-stars #:position [posn (position 0.0 0.0 0.0)]
+                                  #:rotation [rota (rotation 0.0 0.0 0.0)]
+                                  #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                  #:color [col "white"]
+                                  #:count [count 10000]
+                                  #:depth [dep 180]
+                                  #:radius [rad 180]
+                                  #:star-size [size 1.0]
+                                  #:texture [texture ""])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
@@ -1030,6 +1004,9 @@
         #:star-size         [size real?]
         #:texture           [tex (or/c string? h:image?)])
        (returns entity?))
+
+  @{Basic Stars.}
+  
   (basic-entity
    #:components-list (list (star-system (hash "color" (any-color-stx->hex col)
                                               "depth" dep
@@ -1040,18 +1017,18 @@
                                          (make-scale sca sca sca)
                                          sca))))
 
-(define/contract (basic-ocean #:position [posn (position 0.0 0.0 0.0)]
-                              #:rotation [rota (rotation -90.0 0.0 0.0)]
-                              #:scale [sca (make-scale 1.0 1.0 1.0)]
-                              #:amplitude [amp 0.1]
-                              #:amplitude-variance [amp-var 0.3]
-                              #:color [col (make-color (random 256) (random 256) (random 256))]
-                              #:density [den 10]
-                              #:depth [dep 10]
-                              #:opacity [opa 0.8]
-                              #:speed [spe 1.0]
-                              #:speed-variance [spe-var 2.0]
-                              #:width [wid 10])
+(define/contract/doc (basic-ocean #:position [posn (position 0.0 0.0 0.0)]
+                                  #:rotation [rota (rotation -90.0 0.0 0.0)]
+                                  #:scale [sca (make-scale 1.0 1.0 1.0)]
+                                  #:amplitude [amp 0.1]
+                                  #:amplitude-variance [amp-var 0.3]
+                                  #:color [col (make-color (random 256) (random 256) (random 256))]
+                                  #:density [den 10]
+                                  #:depth [dep 10]
+                                  #:opacity [opa 0.8]
+                                  #:speed [spe 1.0]
+                                  #:speed-variance [spe-var 2.0]
+                                  #:width [wid 10])
   (->i ()
        (#:position           [posn object?] 
         #:rotation           [rota object?] 
@@ -1066,6 +1043,9 @@
         #:speed-variance     [spe-var real?] 
         #:width              [wid real?])
        (returns entity?))
+
+  @{Basic Ocean.}
+  
   (basic-entity
    #:components-list (list (ocean (hash "amplitude" amp
                                         "amplitudeVariance" amp-var
@@ -1080,18 +1060,18 @@
                                          (make-scale sca sca sca)
                                          sca))))
 
-(define/contract (basic-particles #:position    [posn (position 0.0 0.0 0.0)]
-                                  #:rotation    [rota (rotation 0.0 0.0 0.0)]
-                                  #:scale       [scale (make-scale 1.0 1.0 1.0)]
-                                  #:preset      [preset 'default]
-                                  #:image       [texture #f]
-                                  #:size        [size    #f]
-                                  #:speed       [speed #f]
-                                  #:age         [age #f]
-                                  #:color       [col #f]
-                                  #:count       [count #f]
-                                  #:posn-spread [spr #f]
-                                  )
+(define/contract/doc (basic-particles #:position    [posn (position 0.0 0.0 0.0)]
+                                      #:rotation    [rota (rotation 0.0 0.0 0.0)]
+                                      #:scale       [scale (make-scale 1.0 1.0 1.0)]
+                                      #:preset      [preset 'default]
+                                      #:image       [texture #f]
+                                      #:size        [size    #f]
+                                      #:speed       [speed #f]
+                                      #:age         [age #f]
+                                      #:color       [col #f]
+                                      #:count       [count #f]
+                                      #:posn-spread [spr #f]
+                                      )
   (->i ()
        (#:position           [posn object?] 
         #:rotation           [rota object?] 
@@ -1105,6 +1085,9 @@
         #:count              [count (or/c #f real?)]
         #:posn-spread        [spr (or/c #f object?)])
        (returns entity?))
+
+  @{Basic Particles.}
+  
   (define p-hash (hash
                   "preset"  (~a preset)
                   "texture" texture
