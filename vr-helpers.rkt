@@ -971,7 +971,7 @@
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
         #:scale             [sca (or/c object? number?)]
-        #:model             [model string?]
+        #:model             [model (or/c string? object?)]
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
