@@ -965,13 +965,13 @@
                                #:rotation        [rota (rotation 0.0 0.0 0.0)]
                                #:scale           [sca (make-scale 1.0 1.0 1.0)]
                                #:model           [model ""]
-                               #:animations-list  [a-list '()]
+                               #:animations-list [a-list '()]
                                #:components-list [c '()])
   (->i ()
        (#:position          [posn object?] 
         #:rotation          [rota object?] 
         #:scale             [sca (or/c object? number?)]
-        #:model             [model (or/c string? object?)]
+        #:model             [model entity?]
         #:animations-list   [a-list (or/c empty? (listof object?))] 
         #:components-list   [c (or/c empty? (listof entity?))])
        (returns entity?))
@@ -981,6 +981,30 @@
   (entity "entity" (append (list posn rota (if (number? sca)
                                                (make-scale sca sca sca)
                                                sca) model)
+                           (append a-list
+                                   c))))
+
+(define/contract/doc (change-entity e
+                                    #:position        [posn (position 0.0 0.0 0.0)]
+                                    #:rotation        [rota (rotation 0.0 0.0 0.0)]
+                                    #:scale           [sca (make-scale 1.0 1.0 1.0)]
+                                    ;#:model           [model ""]
+                                    #:animations-list [a-list '()]
+                                    #:components-list [c '()])
+  (->i ([e entity?])
+       (#:position          [posn object?] 
+        #:rotation          [rota object?] 
+        #:scale             [sca (or/c object? number?)]
+        ;#:model             [model entity?]
+        #:animations-list   [a-list (or/c empty? (listof object?))] 
+        #:components-list   [c (or/c empty? (listof entity?))])
+       (returns entity?))
+
+  @{Modify an Entity.}
+  
+  (entity "entity" (append (list posn rota (if (number? sca)
+                                               (make-scale sca sca sca)
+                                               sca) e)
                            (append a-list
                                    c))))
 
